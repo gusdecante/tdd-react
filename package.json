@@ -23,6 +23,7 @@
     "build": "react-scripts build",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm test -- --watch",
+    "test:ci": "npm test -- --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
