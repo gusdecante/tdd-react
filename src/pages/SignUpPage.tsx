@@ -6,6 +6,7 @@ type SingUpFormRequestProps = {
   email: string;
   password: string;
   passwordRepeat: string;
+  apiProgress: boolean;
 };
 
 class SignUp extends Component {
@@ -14,6 +15,7 @@ class SignUp extends Component {
     email: "",
     password: "",
     passwordRepeat: "",
+    apiProgress: false,
   } as SingUpFormRequestProps;
 
   onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -31,16 +33,16 @@ class SignUp extends Component {
       email,
       password,
     };
-
+    this.setState({ apiProgress: true });
     axios.post("/api/1.0/users", body);
   };
 
   render() {
-    let enabled = true;
-    const { password, passwordRepeat } = this.state;
+    let disabled = true;
+    const { password, passwordRepeat, apiProgress } = this.state;
 
     if (password && passwordRepeat) {
-      enabled = password !== passwordRepeat;
+      disabled = password !== passwordRepeat;
     }
     return (
       <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
@@ -96,7 +98,7 @@ class SignUp extends Component {
             <div className="text-center">
               <button
                 className="btn btn-primary"
-                disabled={enabled}
+                disabled={disabled || apiProgress}
                 onClick={this.submit}
               >
                 Sign Up
