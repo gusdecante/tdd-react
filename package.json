@@ -54,5 +54,6 @@
     "msw": "^0.40.2",
     "react-test-renderer": "^18.1.0",
     "ts-jest": "^28.0.2"
-  }
+  },
+  "proxy": "http://localhost:8080"
 }
