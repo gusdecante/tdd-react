@@ -82,7 +82,7 @@ describe("SignUp Page", () => {
     it("sends username, email and password to backend after clicking the button", () => {
       render(<SignUpPage />);
       const usernameInput = screen.getByLabelText("Username");
-      const emailInput = screen.getByLabelText("Email");
+      const emailInput = screen.getByLabelText("E-mail");
       const passwordInput = screen.getByLabelText("Password");
       const passwordRepeatInput = screen.getByLabelText("Password Repeat");
       userEvent.type(usernameInput, "user1");
@@ -101,7 +101,7 @@ describe("SignUp Page", () => {
 
       const firstCalloFMockFunction = mockFn.mock.calls[0];
       const body = firstCalloFMockFunction[1];
-      axios.post("/....", body);
+
       expect(body).toEqual({
         username: "user1",
         email: "johndoe@me.com",
