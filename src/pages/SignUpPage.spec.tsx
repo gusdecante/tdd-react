@@ -140,10 +140,17 @@ describe("SignUp Page", () => {
       const spinner = screen.getByRole("status");
       expect(spinner).toBeTruthy();
     });
-    it("does not display spinner when there is no api request", () => {
+    it("display spinner after clicking submit", async () => {
+      const server = setupServer(
+        rest.post("/api/1.0/users", (req, res, ctx) => {
+          return res(ctx.status(200));
+        })
+      );
+      server.listen();
       setup();
-      const spinner = screen.queryByRole("status");
-      expect(spinner).toBeFalsy();
+      expect(screen.queryByRole("status")).toBeFalsy();
+      userEvent.click(button);
+      expect(screen.getByRole("status")).toBeTruthy();
     });
   });
 });
