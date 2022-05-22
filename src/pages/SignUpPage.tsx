@@ -101,6 +101,10 @@ class SignUp extends Component {
                 disabled={disabled || apiProgress}
                 onClick={this.submit}
               >
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                />
                 Sign Up
               </button>
             </div>

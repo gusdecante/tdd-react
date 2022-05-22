@@ -138,7 +138,7 @@ describe("SignUp Page", () => {
       userEvent.click(button);
 
       const spinner = screen.getByRole("status");
-      expect(spinner).toBeInTheDocument();
+      expect(spinner).toBeTruthy();
     });
   });
 });
