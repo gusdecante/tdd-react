@@ -27,7 +27,7 @@ class SignUp extends Component {
     });
   };
 
-  submit = (event: FormEvent) => {
+  submit = async (event: FormEvent) => {
     event.preventDefault();
     const { username, email, password } = this.state;
     const body = {
@@ -36,9 +36,10 @@ class SignUp extends Component {
       password,
     };
     this.setState({ apiProgress: true });
-    axios.post("/api/1.0/users", body).then(() => {
+    try {
+      await axios.post("/api/1.0/users", body);
       this.setState({ signUpSuccess: true });
-    });
+    } catch (err) {}
   };
 
   render() {
