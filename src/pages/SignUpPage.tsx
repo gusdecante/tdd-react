@@ -50,72 +50,74 @@ class SignUp extends Component {
     }
     return (
       <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
-        <form className="card mt-5">
-          <div className="card-header">
-            <h1 className="text-center">SignUp</h1>
-          </div>
-          <div className="card-body">
-            <div className="mb-3">
-              <label htmlFor="username" className="form-label">
-                {" "}
-                Username
-              </label>
-              <input
-                id="username"
-                onChange={this.onChange}
-                className="form-control"
-              />
+        {!signUpSuccess && (
+          <form className="card mt-5" data-testid="form-sign-up">
+            <div className="card-header">
+              <h1 className="text-center">SignUp</h1>
             </div>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                {" "}
-                E-mail
-              </label>
-              <input
-                id="email"
-                onChange={this.onChange}
-                className="form-control"
-              />
+            <div className="card-body">
+              <div className="mb-3">
+                <label htmlFor="username" className="form-label">
+                  {" "}
+                  Username
+                </label>
+                <input
+                  id="username"
+                  onChange={this.onChange}
+                  className="form-control"
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">
+                  {" "}
+                  E-mail
+                </label>
+                <input
+                  id="email"
+                  onChange={this.onChange}
+                  className="form-control"
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  onChange={this.onChange}
+                  className="form-control"
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="passwordRepeat" className="form-label">
+                  Password Repeat
+                </label>
+                <input
+                  type="password"
+                  id="passwordRepeat"
+                  onChange={this.onChange}
+                  className="form-control"
+                />
+              </div>
+              <div className="text-center">
+                <button
+                  className="btn btn-primary"
+                  disabled={disabled || apiProgress}
+                  onClick={this.submit}
+                >
+                  {apiProgress && (
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                    />
+                  )}
+                  Sign Up
+                </button>
+              </div>
             </div>
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                onChange={this.onChange}
-                className="form-control"
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="passwordRepeat" className="form-label">
-                Password Repeat
-              </label>
-              <input
-                type="password"
-                id="passwordRepeat"
-                onChange={this.onChange}
-                className="form-control"
-              />
-            </div>
-            <div className="text-center">
-              <button
-                className="btn btn-primary"
-                disabled={disabled || apiProgress}
-                onClick={this.submit}
-              >
-                {apiProgress && (
-                  <span
-                    className="spinner-border spinner-border-sm"
-                    role="status"
-                  />
-                )}
-                Sign Up
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        )}
         {signUpSuccess && (
           <div className="alert alert-success mt-3">
             Please check your e-mail to activate your account
