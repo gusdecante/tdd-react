@@ -1,5 +1,5 @@
 import SignUpPage from "./SignUpPage";
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
@@ -169,6 +169,21 @@ describe("SignUp Page", () => {
       const message = "Please check your e-mail to activate your account";
       expect(screen.queryByText(message)).toBeFalsy();
       userEvent.click(button);
+    });
+    it("hides sign up form after successful sign up request", async () => {
+      const server = setupServer(
+        rest.post("/api/1.0/users", (req, res, ctx) => {
+          return res(ctx.status(200));
+        })
+      );
+      server.listen();
+      setup();
+
+      const form = screen.getByTestId("form-sign-up");
+      userEvent.click(button);
+      await waitFor(() => {
+        expect(form).not.toBeInTheDocument();
+      });
     });
   });
 });
