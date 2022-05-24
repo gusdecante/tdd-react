@@ -2,7 +2,7 @@ import SignUpPage from "./SignUpPage";
 import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
-import { rest } from "msw";
+import { DefaultBodyType, rest } from "msw";
 
 describe("SignUp Page", () => {
   describe("Layout", () => {
@@ -68,6 +68,24 @@ describe("SignUp Page", () => {
   describe("Interactions", () => {
     let button: HTMLButtonElement;
 
+    let requestBody: DefaultBodyType;
+    let counter = 0;
+    const server = setupServer(
+      rest.post("/api/1.0/users", (req, res, ctx) => {
+        counter += 1;
+        requestBody = req.body;
+        return res(ctx.status(200));
+      })
+    );
+
+    beforeEach(() => {
+      counter = 0;
+    });
+
+    beforeAll(() => server.listen());
+
+    afterAll(() => server.close());
+
     const setup = () => {
       render(<SignUpPage />);
       const usernameInput = screen.getByLabelText("Username");
@@ -89,13 +107,6 @@ describe("SignUp Page", () => {
       expect(button.disabled).toBe(false);
     });
     it("sends username, email and password to backend after clicking the button", async () => {
-      let requestBody;
-      const server = setupServer(
-        rest.post("/api/1.0/users", (req, res, ctx) => {
-          requestBody = req.body;
-          return res(ctx.status(200));
-        })
-      );
       server.listen();
       setup();
       userEvent.click(button);
@@ -111,14 +122,6 @@ describe("SignUp Page", () => {
       });
     });
     it("disables button when there is an ongoing api call", async () => {
-      let counter = 0;
-      const server = setupServer(
-        rest.post("/api/1.0/users", (req, res, ctx) => {
-          counter += 1;
-          return res(ctx.status(200));
-        })
-      );
-      server.listen();
       setup();
 
       userEvent.click(button);
@@ -129,13 +132,7 @@ describe("SignUp Page", () => {
       );
       expect(counter).toBe(1);
     });
-    it("display spinner while the api request in progress", async () => {
-      const server = setupServer(
-        rest.post("/api/1.0/users", (req, res, ctx) => {
-          return res(ctx.status(200));
-        })
-      );
-      server.listen();
+    it("display spinner while the is an ongoing api call", async () => {
       setup();
 
       userEvent.click(button);
@@ -144,12 +141,6 @@ describe("SignUp Page", () => {
       expect(spinner).toBeTruthy();
     });
     it("display spinner after clicking submit", async () => {
-      const server = setupServer(
-        rest.post("/api/1.0/users", (req, res, ctx) => {
-          return res(ctx.status(200));
-        })
-      );
-      server.listen();
       setup();
       expect(screen.queryByRole("status")).toBeFalsy();
       userEvent.click(button);
@@ -159,11 +150,6 @@ describe("SignUp Page", () => {
       );
     });
     it("displays account activation notification after successful sign up request", async () => {
-      const server = setupServer(
-        rest.post("/api/1.0/users", (req, res, ctx) => {
-          return res(ctx.status(200));
-        })
-      );
       server.listen();
       setup();
       const message = "Please check your e-mail to activate your account";
@@ -171,11 +157,6 @@ describe("SignUp Page", () => {
       userEvent.click(button);
     });
     it("hides sign up form after successful sign up request", async () => {
-      const server = setupServer(
-        rest.post("/api/1.0/users", (req, res, ctx) => {
-          return res(ctx.status(200));
-        })
-      );
       server.listen();
       setup();
 
