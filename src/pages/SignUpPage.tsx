@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { ChangeEvent, Component, FormEvent } from "react";
 
 // if (error?.response.status === 400) {
@@ -57,9 +57,9 @@ class SignUp extends Component {
       this.setState({ signUpSuccess: true });
     } catch (error: any) {
       if (error?.response.status === 400) {
-        console.log(error);
         this.setState({ errors: error.response.data.validationErrors });
       }
+      this.setState({ apiProgress: false });
     }
   };
 
