@@ -1,5 +1,15 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { ChangeEvent, Component, FormEvent } from "react";
+
+// if (error?.response.status === 400) {
+//   this.setState({ errors: error.response.data.validationErrors });
+// }
+
+type ValidationErrorsProps = {
+  username?: string;
+  email?: string;
+  password?: string;
+};
 
 type SingUpFormRequestProps = {
   username: string;
@@ -8,6 +18,7 @@ type SingUpFormRequestProps = {
   passwordRepeat: string;
   apiProgress: boolean;
   signUpSuccess: boolean;
+  errors: ValidationErrorsProps;
 };
 
 class SignUp extends Component {
@@ -18,6 +29,11 @@ class SignUp extends Component {
     passwordRepeat: "",
     apiProgress: false,
     signUpSuccess: false,
+    errors: {
+      username: undefined,
+      email: undefined,
+      password: undefined,
+    },
   } as SingUpFormRequestProps;
 
   onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -39,12 +55,18 @@ class SignUp extends Component {
     try {
       await axios.post("/api/1.0/users", body);
       this.setState({ signUpSuccess: true });
-    } catch (err) {}
+    } catch (error: any) {
+      if (error?.response.status === 400) {
+        console.log(error);
+        this.setState({ errors: error.response.data.validationErrors });
+      }
+    }
   };
 
   render() {
     let disabled = true;
-    const { password, passwordRepeat, apiProgress, signUpSuccess } = this.state;
+    const { apiProgress, errors, password, passwordRepeat, signUpSuccess } =
+      this.state;
 
     if (password && passwordRepeat) {
       disabled = password !== passwordRepeat;
@@ -67,6 +89,7 @@ class SignUp extends Component {
                   onChange={this.onChange}
                   className="form-control"
                 />
+                <span>{errors.username}</span>
               </div>
               <div className="mb-3">
                 <label htmlFor="email" className="form-label">
