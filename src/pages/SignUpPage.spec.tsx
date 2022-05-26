@@ -80,6 +80,7 @@ describe("SignUp Page", () => {
 
     beforeEach(() => {
       counter = 0;
+      server.resetHandlers();
     });
 
     beforeAll(() => server.listen());
