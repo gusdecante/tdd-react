@@ -1,9 +1,7 @@
 import axios from "axios";
 import { ChangeEvent, Component, FormEvent } from "react";
 
-// if (error?.response.status === 400) {
-//   this.setState({ errors: error.response.data.validationErrors });
-// }
+import Input from "../components/Input";
 
 type ValidationErrorsProps = {
   username?: string;
@@ -79,18 +77,12 @@ class SignUp extends Component {
               <h1 className="text-center">SignUp</h1>
             </div>
             <div className="card-body">
-              <div className="mb-3">
-                <label htmlFor="username" className="form-label">
-                  {" "}
-                  Username
-                </label>
-                <input
-                  id="username"
-                  onChange={this.onChange}
-                  className="form-control"
-                />
-                <span>{errors.username}</span>
-              </div>
+              <Input
+                id="username"
+                label="Username"
+                onChange={this.onChange}
+                help={errors.username}
+              />
               <div className="mb-3">
                 <label htmlFor="email" className="form-label">
                   {" "}
