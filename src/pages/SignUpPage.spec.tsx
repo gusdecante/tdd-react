@@ -133,7 +133,7 @@ describe("SignUp Page", () => {
       );
       expect(counter).toBe(1);
     });
-    it("display spinner while the is an ongoing api call", async () => {
+    it("display spinner while there is an ongoing api call", async () => {
       setup();
 
       userEvent.click(button);
