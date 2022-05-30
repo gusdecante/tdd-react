@@ -69,6 +69,9 @@ class SignUp extends Component {
     if (password && passwordRepeat) {
       disabled = password !== passwordRepeat;
     }
+
+    let passwordMismatch =
+      password !== passwordRepeat ? "Password mismatch" : "";
     return (
       <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
         {!signUpSuccess && (
@@ -96,28 +99,13 @@ class SignUp extends Component {
                 help={errors.password}
                 type="password"
               />
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  onChange={this.onChange}
-                  className="form-control"
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="passwordRepeat" className="form-label">
-                  Password Repeat
-                </label>
-                <input
-                  type="password"
-                  id="passwordRepeat"
-                  onChange={this.onChange}
-                  className="form-control"
-                />
-              </div>
+              <Input
+                id="passwordRepeat"
+                label="Password Repeat"
+                onChange={this.onChange}
+                help={passwordMismatch}
+                type="password"
+              />
               <div className="text-center">
                 <button
                   className="btn btn-primary"
