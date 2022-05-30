@@ -66,8 +66,6 @@ describe("SignUp Page", () => {
     });
   });
   describe("Interactions", () => {
-    let button: HTMLButtonElement;
-
     let requestBody: DefaultBodyType;
     let counter = 0;
     const server = setupServer(
@@ -87,12 +85,15 @@ describe("SignUp Page", () => {
 
     afterAll(() => server.close());
 
+    let button: HTMLButtonElement,
+      passwordInput: Element,
+      passwordRepeatInput: Element;
     const setup = () => {
       render(<SignUpPage />);
       const usernameInput = screen.getByLabelText("Username");
       const emailInput = screen.getByLabelText("E-mail");
-      const passwordInput = screen.getByLabelText("Password");
-      const passwordRepeatInput = screen.getByLabelText("Password Repeat");
+      passwordInput = screen.getByLabelText("Password");
+      passwordRepeatInput = screen.getByLabelText("Password Repeat");
       userEvent.type(usernameInput, "user1");
       userEvent.type(emailInput, "johndoe@me.com");
       userEvent.type(passwordInput, "P4ssword");
@@ -201,6 +202,13 @@ describe("SignUp Page", () => {
       await screen.findByText("Username cannot be null");
       expect(screen.queryByRole("status")).not.toBeInTheDocument();
       expect(button).toBeEnabled();
+    });
+    it("displays mismatch for password repeat", () => {
+      setup();
+      userEvent.type(passwordInput, "P4ssword");
+      userEvent.type(passwordRepeatInput, "AnotherP4ssword");
+      const validationError = screen.queryByText("Password mismatch");
+      expect(validationError).toBeInTheDocument();
     });
   });
 });
