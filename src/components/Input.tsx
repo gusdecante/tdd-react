@@ -5,9 +5,16 @@ type InputProps = {
   label?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   help?: string;
+  type?: string;
 };
 
-const Input: React.FC<InputProps> = ({ id, label, onChange, help }) => {
+const Input: React.FC<InputProps> = ({
+  id,
+  label,
+  onChange,
+  help,
+  type = "text",
+}) => {
   let inputClass = "form-control";
   if (help) {
     inputClass += " is-invalid";
@@ -18,7 +25,7 @@ const Input: React.FC<InputProps> = ({ id, label, onChange, help }) => {
       <label htmlFor={id} className="form-label">
         {label}
       </label>
-      <input id={id} onChange={onChange} className={inputClass} />
+      <input id={id} onChange={onChange} className={inputClass} type={type} />
       <span data-testid="help-message" className="invalid-feedback">
         {help}
       </span>
