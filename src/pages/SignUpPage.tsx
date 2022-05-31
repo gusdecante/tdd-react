@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ChangeEvent, Component, FormEvent } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import Input from "../components/Input";
 
@@ -19,7 +20,7 @@ type SingUpFormRequestProps = {
   errors: ValidationErrorsProps;
 };
 
-class SignUp extends Component {
+class SignUpPage extends Component<WithTranslation> {
   state = {
     username: "",
     email: "",
@@ -66,6 +67,7 @@ class SignUp extends Component {
   };
 
   render() {
+    const { t } = this.props;
     let disabled = true;
     const { apiProgress, errors, password, passwordRepeat, signUpSuccess } =
       this.state;
@@ -81,31 +83,31 @@ class SignUp extends Component {
         {!signUpSuccess && (
           <form className="card mt-5" data-testid="form-sign-up">
             <div className="card-header">
-              <h1 className="text-center">SignUp</h1>
+              <h1 className="text-center">{t("signUp")}</h1>
             </div>
             <div className="card-body">
               <Input
                 id="username"
-                label="Username"
+                label={t("username")}
                 onChange={this.onChange}
                 help={errors.username}
               />
               <Input
                 id="email"
-                label="E-mail"
+                label={t("email")}
                 onChange={this.onChange}
                 help={errors.email}
               />
               <Input
                 id="password"
-                label="Password"
+                label={t("password")}
                 onChange={this.onChange}
                 help={errors.password}
                 type="password"
               />
               <Input
                 id="passwordRepeat"
-                label="Password Repeat"
+                label={t("passwordRepeat")}
                 onChange={this.onChange}
                 help={passwordMismatch}
                 type="password"
@@ -122,7 +124,7 @@ class SignUp extends Component {
                       role="status"
                     />
                   )}
-                  Sign Up
+                  {t("signUp")}
                 </button>
               </div>
             </div>
@@ -138,4 +140,6 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+const SignUpPageWithTranslation = withTranslation()(SignUpPage);
+
+export default SignUpPageWithTranslation;

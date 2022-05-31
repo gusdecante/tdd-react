@@ -3,14 +3,17 @@ import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { DefaultBodyType, rest } from "msw";
+import "../core/locale/i18n";
 
 describe("SignUp Page", () => {
   describe("Layout", () => {
     afterEach(cleanup);
     it("has header", () => {
       render(<SignUpPage />);
-      const header = screen.queryByRole("heading", { name: "SignUp" });
-      expect(header).toBeTruthy();
+      const header = screen.getByRole("heading", {
+        name: "Sign Up",
+      });
+      expect(header).toBeInTheDocument();
     });
     it("has username input", () => {
       render(<SignUpPage />);
