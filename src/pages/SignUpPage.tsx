@@ -28,16 +28,20 @@ class SignUp extends Component {
     apiProgress: false,
     signUpSuccess: false,
     errors: {
-      username: undefined,
-      email: undefined,
-      password: undefined,
+      username: "",
+      email: "",
+      password: "",
     },
   } as SingUpFormRequestProps;
 
   onChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target;
+
+    const errorsCopy = { ...this.state.errors };
+    delete errorsCopy[id as "email" | "password" | "username"];
     this.setState({
       [id]: value,
+      errors: errorsCopy,
     });
   };
 
