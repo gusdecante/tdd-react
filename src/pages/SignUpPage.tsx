@@ -135,6 +135,20 @@ class SignUpPage extends Component<WithTranslation> {
             Please check your e-mail to activate your account
           </div>
         )}
+        <img
+          src="https://countryflagsapi.com/svg/br"
+          alt="Brazil flag"
+          title="Portuguese"
+          height="32px"
+          onClick={() => this.props.i18n.changeLanguage("pt")}
+        />
+        <img
+          src="https://countryflagsapi.com/svg/gb"
+          alt="The United States Of America flag"
+          height="32px"
+          title="English"
+          onClick={() => this.props.i18n.changeLanguage("en")}
+        />
       </div>
     );
   }
