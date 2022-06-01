@@ -4,6 +4,8 @@ import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { DefaultBodyType, rest } from "msw";
 import "../core/locale/i18n";
+import en from "../core/locale/en.json";
+import pt from "../core/locale/pt.json";
 
 describe("SignUp Page", () => {
   describe("Layout", () => {
@@ -230,5 +232,56 @@ describe("SignUp Page", () => {
         expect(screen.queryByLabelText(message)).not.toBeInTheDocument();
       }
     );
+  });
+  describe("Internationalization", () => {
+    it("initially displays all text in English", () => {
+      render(<SignUpPage />);
+      expect(
+        screen.getByRole("heading", { name: en.signUp })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: en.signUp })
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText(en.username)).toBeInTheDocument();
+      expect(screen.getByLabelText(en.email)).toBeInTheDocument();
+      expect(screen.getByLabelText(en.password)).toBeInTheDocument();
+      expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
+    });
+    it("displays all text in Portuguese after changing the language", () => {
+      render(<SignUpPage />);
+
+      const portugueseToggle = screen.getByTitle("Portuguese");
+      userEvent.click(portugueseToggle);
+
+      expect(
+        screen.getByRole("heading", { name: pt.signUp })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: pt.signUp })
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText(pt.username)).toBeInTheDocument();
+      expect(screen.getByLabelText(pt.email)).toBeInTheDocument();
+      expect(screen.getByLabelText(pt.password)).toBeInTheDocument();
+      expect(screen.getByLabelText(pt.passwordRepeat)).toBeInTheDocument();
+    });
+    it("displays all text in English after changing back from Portuguese", () => {
+      render(<SignUpPage />);
+
+      const portugueseToggle = screen.getByTitle("Portuguese");
+      userEvent.click(portugueseToggle);
+      const englishToggle = screen.getByTitle("English");
+      userEvent.click(englishToggle);
+
+      expect(
+        screen.getByRole("heading", { name: en.signUp })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: en.signUp })
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText(en.username)).toBeInTheDocument();
+      expect(screen.getByLabelText(en.email)).toBeInTheDocument();
+      expect(screen.getByLabelText(en.password)).toBeInTheDocument();
+      expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
+    });
   });
 });
