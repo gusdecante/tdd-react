@@ -3,7 +3,6 @@ import { ChangeEvent, Component, FormEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import Input from "../components/Input";
-import LanguageSelector from "../components/LanguageSelector";
 
 type ValidationErrorsProps = {
   username?: string;
@@ -78,7 +77,7 @@ class SignUpPage extends Component<WithTranslation> {
     }
 
     let passwordMismatch =
-      password !== passwordRepeat ? "Password mismatch" : "";
+      password !== passwordRepeat ? t("passwordMismatchValidation") : "";
     return (
       <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
         {!signUpSuccess && (
