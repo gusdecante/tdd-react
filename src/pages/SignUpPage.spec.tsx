@@ -22,19 +22,19 @@ describe("SignUp Page", () => {
       render(<SignUpPage />);
 
       const input = screen.getByLabelText("Username");
-      expect(input).toBeTruthy();
+      expect(input).toBeInTheDocument();
     });
     it("has email input", () => {
       render(<SignUpPage />);
 
       const input = screen.getByLabelText("E-mail");
-      expect(input).toBeTruthy();
+      expect(input).toBeInTheDocument();
     });
     it("has password input", () => {
       render(<SignUpPage />);
 
       const input = screen.getByLabelText("Password");
-      expect(input).toBeTruthy();
+      expect(input).toBeInTheDocument();
     });
     it("has password type for password input", () => {
       render(<SignUpPage />);
@@ -46,7 +46,7 @@ describe("SignUp Page", () => {
       render(<SignUpPage />);
 
       const input = screen.getByLabelText("Password Repeat");
-      expect(input).toBeTruthy();
+      expect(input).toBeInTheDocument();
     });
     it("has password type for password repeat input", () => {
       render(<SignUpPage />);
@@ -235,6 +235,8 @@ describe("SignUp Page", () => {
     );
   });
   describe("Internationalization", () => {
+    let portugueseToggle: Element;
+    let englishToggle: Element;
     const setup = () => {
       render(
         <>
@@ -242,6 +244,9 @@ describe("SignUp Page", () => {
           <LanguageSelector />
         </>
       );
+
+      portugueseToggle = screen.getByTitle("Portuguese");
+      englishToggle = screen.getByTitle("English");
     };
 
     afterEach(() => {
@@ -250,23 +255,6 @@ describe("SignUp Page", () => {
       });
     });
 
-    it("displays all text in Portuguese after changing the language", () => {
-      setup();
-
-      const portugueseToggle = screen.getByTitle("Portuguese");
-      userEvent.click(portugueseToggle);
-
-      expect(
-        screen.getByRole("heading", { name: pt.signUp })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: pt.signUp })
-      ).toBeInTheDocument();
-      expect(screen.getByLabelText(pt.username)).toBeInTheDocument();
-      expect(screen.getByLabelText(pt.email)).toBeInTheDocument();
-      expect(screen.getByLabelText(pt.password)).toBeInTheDocument();
-      expect(screen.getByLabelText(pt.passwordRepeat)).toBeInTheDocument();
-    });
     it("initially displays all text in English", () => {
       setup();
 
@@ -281,12 +269,26 @@ describe("SignUp Page", () => {
       expect(screen.getByLabelText(en.password)).toBeInTheDocument();
       expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
     });
+    it("displays all text in Portuguese after changing the language", () => {
+      setup();
+
+      userEvent.click(portugueseToggle);
+
+      expect(
+        screen.getByRole("heading", { name: pt.signUp })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: pt.signUp })
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText(pt.username)).toBeInTheDocument();
+      expect(screen.getByLabelText(pt.email)).toBeInTheDocument();
+      expect(screen.getByLabelText(pt.password)).toBeInTheDocument();
+      expect(screen.getByLabelText(pt.passwordRepeat)).toBeInTheDocument();
+    });
     it("displays all text in English after changing back from Portuguese", () => {
       setup();
 
-      const portugueseToggle = screen.getByTitle("Portuguese");
       userEvent.click(portugueseToggle);
-      const englishToggle = screen.getByTitle("English");
       userEvent.click(englishToggle);
 
       expect(
@@ -299,6 +301,19 @@ describe("SignUp Page", () => {
       expect(screen.getByLabelText(en.email)).toBeInTheDocument();
       expect(screen.getByLabelText(en.password)).toBeInTheDocument();
       expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
+    });
+    it("displays password mismatch validation in Portuguese", () => {
+      setup();
+
+      userEvent.click(portugueseToggle);
+
+      const passwordInput = screen.getByLabelText(pt.password);
+
+      userEvent.type(passwordInput, "P4ss");
+      const validationMessageInPortuguese = screen.queryByText(
+        pt.passwordMismatchValidation
+      );
+      expect(validationMessageInPortuguese).toBeInTheDocument();
     });
   });
 });
