@@ -1,8 +1,7 @@
-import axios from "axios";
 import { ChangeEvent, Component, FormEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
-
 import Input from "../components/Input";
+import { signUp } from "../core/api/apiCalls";
 
 type ValidationErrorsProps = {
   username?: string;
@@ -56,11 +55,7 @@ class SignUpPage extends Component<WithTranslation> {
     };
     this.setState({ apiProgress: true });
     try {
-      await axios.post("/api/1.0/users", body, {
-        headers: {
-          "Accept-Language": this.props.i18n.language,
-        },
-      });
+      await signUp(body);
       this.setState({ signUpSuccess: true });
     } catch (error: any) {
       if (error?.response.status === 400) {
