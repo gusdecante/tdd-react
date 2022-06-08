@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import App from "./App";
+import useEvent from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event";
 
 describe("Routing", () => {
   const setup = (path: string) => {
@@ -40,6 +42,32 @@ describe("Routing", () => {
       setup(path);
       const page = screen.queryByTestId(pageTestId);
       expect(page).not.toBeInTheDocument();
+    }
+  );
+
+  it.each`
+    targetPage
+    ${"Home"}
+    ${"Sign Up"}
+    ${"Login"}
+  `("has link to $tagetPage on NavBar", ({ targetPage }) => {
+    setup("/");
+    const link = screen.getByRole("link", { name: targetPage });
+    expect(link).toBeInTheDocument();
+  });
+
+  it.each`
+    initialPath  | clickInto    | visiblePage
+    ${"/"}       | ${"Sign Up"} | ${"signup-page"}
+    ${"/signup"} | ${"Home"}    | ${"home-page"}
+    ${"/signup"} | ${"Login"}   | ${"login-page"}
+  `(
+    "displays $visiblePage after clicking $clickingTo",
+    ({ initialPath, clickInto, visiblePage }) => {
+      setup(initialPath);
+      const link = screen.getByRole("link", { name: clickInto });
+      userEvent.click(link);
+      expect(screen.getByTestId(visiblePage)).toBeInTheDocument();
     }
   );
 });
