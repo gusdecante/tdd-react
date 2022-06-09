@@ -1,4 +1,3 @@
-import { MouseEvent, useState } from "react";
 import SignUpPage from "./pages/SignUpPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -6,50 +5,39 @@ import UserPage from "./pages/UserPage";
 import LanguageSelector from "./components/LanguageSelector";
 import { useTranslation } from "react-i18next";
 import logo from "./assets/hoaxify.png";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 function App() {
   const { t } = useTranslation();
-  const [path, setPath] = useState<string>(window.location.pathname);
-
-  const onClickLink = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    const el = event.currentTarget as HTMLAnchorElement;
-    const path = el.getAttribute("href") as string;
-    window.history.pushState({}, "", path);
-    setPath(path);
-  };
 
   return (
-    <>
+    <Router>
       <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
         <div className="container">
-          <a
-            className="navbar-brand"
-            href="/"
-            title="Home"
-            onClick={onClickLink}
-          >
+          <Link className="navbar-brand" to="/" title="Home">
             <img src={logo} alt="Hoaxify" width="60" />
             Hoaxify
-          </a>
+          </Link>
           <ul className="navbar-nav">
-            <a className="nav-link" href="/signup" onClick={onClickLink}>
+            <Link className="nav-link" to="/signup">
               {t("signUp")}
-            </a>
-            <a className="nav-link" href="/login" onClick={onClickLink}>
+            </Link>
+            <Link className="nav-link" to="/login">
               Login
-            </a>
+            </Link>
           </ul>
         </div>
       </nav>
       <div className="container">
-        {path === "/" && <HomePage />}
-        {path === "/signup" && <SignUpPage />}
-        {path === "/login" && <LoginPage />}
-        {path.startsWith("/user/") && <UserPage />}
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/user/:id" element={<UserPage />} />
+        </Routes>
         <LanguageSelector />
       </div>
-    </>
+    </Router>
   );
 }
 
