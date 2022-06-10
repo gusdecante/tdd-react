@@ -2,6 +2,7 @@ import SignUpPage from "./pages/SignUpPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
+import AccountActivationPage from "./pages/AccountActivationPage";
 import LanguageSelector from "./components/LanguageSelector";
 import { useTranslation } from "react-i18next";
 import logo from "./assets/hoaxify.png";
@@ -34,6 +35,7 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/user/:id" element={<UserPage />} />
+          <Route path="/activate/:token" element={<AccountActivationPage />} />
         </Routes>
         <LanguageSelector />
       </div>
