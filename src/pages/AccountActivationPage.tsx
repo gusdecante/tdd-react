@@ -13,7 +13,8 @@ const AccountActivationPage = () => {
       .catch(() => {
         setResult("fail");
       });
-  }, []);
+  }, [token]);
+
   return (
     <div data-testid="activation-page">
       {result === "success" && (
