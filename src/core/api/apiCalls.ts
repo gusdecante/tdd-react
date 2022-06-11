@@ -14,3 +14,7 @@ export const signUp = (body: ISignUp) => {
     },
   });
 };
+
+export const activate = (token: string) => {
+  return axios.post(`/api/1.0/users/token/${token}`);
+};
