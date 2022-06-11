@@ -7,10 +7,10 @@ import Router from "react-router-dom";
 let counter = 0;
 const server = setupServer(
   rest.post("/api/1.0/users/token/:token", (req, res, ctx) => {
+    counter += 1;
     if (req.params.token === "5678") {
       return res(ctx.status(400));
     }
-    counter += 1;
     return res(ctx.status(200));
   })
 );
@@ -50,5 +50,14 @@ describe("Account Activation Page", () => {
     setup("5678");
     const message = await screen.findByText("Activation failure");
     expect(message).toBeInTheDocument();
+  });
+  it("sends activation request after the token is changed", async () => {
+    jest.spyOn(Router, "useParams").mockReturnValue({ token: "1234" });
+    const { rerender } = render(<AccountActivationPage />);
+    await screen.findByText("Account is activated");
+    jest.spyOn(Router, "useParams").mockReturnValue({ token: "5678" });
+    rerender(<AccountActivationPage />);
+    await screen.findByText("Activation failure");
+    expect(counter).toBe(2);
   });
 });
