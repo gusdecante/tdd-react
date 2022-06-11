@@ -1,6 +1,22 @@
 import { render, screen } from "@testing-library/react";
 import App from "./App";
 import userEvent from "@testing-library/user-event";
+import { setupServer } from "msw/node";
+import { rest } from "msw";
+
+const server = setupServer(
+  rest.post("/api/1.0/users/token/:token", (req, res, ctx) => {
+    return res(ctx.status(200));
+  })
+);
+
+beforeEach(() => {
+  server.resetHandlers();
+});
+
+beforeAll(() => server.listen());
+
+afterAll(() => server.close());
 
 describe("Routing", () => {
   const setup = (path: string) => {
@@ -87,3 +103,5 @@ describe("Routing", () => {
     expect(screen.getByTestId("home-page")).toBeInTheDocument();
   });
 });
+
+console.error = () => {};
