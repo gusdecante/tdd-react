@@ -1,7 +1,7 @@
 import { ChangeEvent, Component, FormEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { signUp } from "../../core/api/apiCalls";
-import { Alert, Input } from "../../components/";
+import { Alert, Input, Spinner } from "../../components/";
 
 type ValidationErrorsProps = {
   username?: string;
@@ -25,7 +25,7 @@ class SignUpPage extends Component<WithTranslation> {
     email: "",
     password: "",
     passwordRepeat: "",
-    apiProgress: false,
+    apiProgress: true,
     signUpSuccess: false,
     errors: {
       username: "",
@@ -120,12 +120,7 @@ class SignUpPage extends Component<WithTranslation> {
                   disabled={disabled || apiProgress}
                   onClick={this.submit}
                 >
-                  {apiProgress && (
-                    <span
-                      className="spinner-border spinner-border-sm"
-                      role="status"
-                    />
-                  )}
+                  {apiProgress && <Spinner />}
                   {t("signUp")}
                 </button>
               </div>

@@ -1,6 +1,6 @@
 import { activate } from "../../core/api/apiCalls";
 import { useEffect, useState } from "react";
-import { Alert } from "../../components";
+import { Alert, Spinner } from "../../components";
 import { useParams } from "react-router-dom";
 
 export const AccountActivationPage = () => {
@@ -17,7 +17,7 @@ export const AccountActivationPage = () => {
       });
   }, [token]);
 
-  let content = <span className="spinner-border" role="status" />;
+  let content = <Spinner size="big" />;
 
   if (result === "success") {
     content = <Alert text="Account is activated" />;

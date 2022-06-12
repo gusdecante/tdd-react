@@ -13,7 +13,7 @@ import { DefaultBodyType, rest } from "msw";
 import i18n from "../../core/locale/i18n";
 import en from "../../core/locale/en.json";
 import pt from "../../core/locale/pt.json";
-import LanguageSelector from "../../components/pages/LanguageSelector/LanguageSelector";
+import { LanguageSelector } from "../../components";
 
 let requestBody: DefaultBodyType;
 let counter = 0;
