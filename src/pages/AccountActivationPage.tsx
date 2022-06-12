@@ -1,5 +1,6 @@
 import { activate } from "../core/api/apiCalls";
 import { useEffect, useState } from "react";
+import Alert from "../components/Alert";
 import { useParams } from "react-router-dom";
 
 const AccountActivationPage = () => {
@@ -19,11 +20,9 @@ const AccountActivationPage = () => {
   let content = <span className="spinner-border" role="status" />;
 
   if (result === "success") {
-    content = (
-      <div className="alert alert-success mt-3">Account is activated</div>
-    );
+    content = <Alert text="Account is activated" />;
   } else if (result === "fail") {
-    content = <div className="alert alert-danger mt-3">Activation failure</div>;
+    content = <Alert type="danger" text="Activation failure" />;
   }
 
   return <div data-testid="activation-page">{content}</div>;
