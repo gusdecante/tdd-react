@@ -60,4 +60,24 @@ describe("Account Activation Page", () => {
     await screen.findByText("Activation failure");
     expect(counter).toBe(2);
   });
+
+  it("displays spinner during activation api call", async () => {
+    setup("5678");
+    const spinner = screen.queryByRole("status");
+    expect(spinner).toBeInTheDocument();
+    await screen.findByText("Activation failure");
+    expect(spinner).not.toBeInTheDocument();
+  });
+
+  it("displays spinner after second api call to the changed token", async () => {
+    jest.spyOn(Router, "useParams").mockReturnValue({ token: "1234" });
+    const { rerender } = render(<AccountActivationPage />);
+    await screen.findByText("Account is activated");
+    jest.spyOn(Router, "useParams").mockReturnValue({ token: "5678" });
+    rerender(<AccountActivationPage />);
+    const spinner = screen.queryByRole("status");
+    expect(spinner).toBeInTheDocument();
+    await screen.findByText("Activation failure");
+    expect(spinner).not.toBeInTheDocument();
+  });
 });
