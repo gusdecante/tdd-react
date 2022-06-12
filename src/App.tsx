@@ -1,9 +1,6 @@
-import SignUpPage from "./pages/SignUpPage";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import UserPage from "./pages/UserPage";
-import AccountActivationPage from "./pages/AccountActivationPage";
-import LanguageSelector from "./components/LanguageSelector";
+import SignUpPage from "./pages/SignUpPage/SignUpPage";
+import { HomePage, LoginPage, UserPage, AccountActivationPage } from "./pages";
+import { LanguageSelector } from "./components";
 import { useTranslation } from "react-i18next";
 import logo from "./assets/hoaxify.png";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";

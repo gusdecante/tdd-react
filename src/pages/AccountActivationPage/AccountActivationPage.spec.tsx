@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import AccountActivationPage from "./AccountActivationPage";
+import { AccountActivationPage } from "./AccountActivationPage";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import Router from "react-router-dom";

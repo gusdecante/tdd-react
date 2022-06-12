@@ -1,8 +1,7 @@
 import { ChangeEvent, Component, FormEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
-import Input from "../components/Input";
-import { signUp } from "../core/api/apiCalls";
-import Alert from "../components/Alert";
+import { signUp } from "../../core/api/apiCalls";
+import { Alert, Input } from "../../components/";
 
 type ValidationErrorsProps = {
   username?: string;

@@ -1,9 +1,9 @@
-import { activate } from "../core/api/apiCalls";
+import { activate } from "../../core/api/apiCalls";
 import { useEffect, useState } from "react";
-import Alert from "../components/Alert";
+import { Alert } from "../../components";
 import { useParams } from "react-router-dom";
 
-const AccountActivationPage = () => {
+export const AccountActivationPage = () => {
   const [result, setResult] = useState<string>();
   const { token } = useParams();
   useEffect(() => {
@@ -27,5 +27,3 @@ const AccountActivationPage = () => {
 
   return <div data-testid="activation-page">{content}</div>;
 };
-
-export default AccountActivationPage;

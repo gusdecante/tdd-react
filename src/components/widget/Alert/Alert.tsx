@@ -3,9 +3,7 @@ interface IAlert {
   text: string;
 }
 
-const Alert = ({ type = "success", text }: IAlert) => {
+export const Alert = ({ type = "success", text }: IAlert) => {
   let classForAlert = `alert alert-${type}`;
   return <div className={classForAlert}>{text}</div>;
 };
-
-export default Alert;
