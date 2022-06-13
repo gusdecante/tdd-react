@@ -1,9 +1,11 @@
+import React, { ReactNode } from "react";
+
 interface IAlert {
-  type?: "danger" | "success";
-  text: string;
+  type?: "danger" | "success" | "secondary";
+  children: ReactNode;
 }
 
-export const Alert = ({ type = "success", text }: IAlert) => {
+export const Alert: React.FC<IAlert> = ({ type = "success", children }) => {
   let classForAlert = `alert alert-${type}`;
-  return <div className={classForAlert}>{text}</div>;
+  return <div className={classForAlert}>{children}</div>;
 };

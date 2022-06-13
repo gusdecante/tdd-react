@@ -17,13 +17,17 @@ export const AccountActivationPage = () => {
       });
   }, [token]);
 
-  let content = <Spinner size="big" />;
+  let content = (
+    <Alert type="secondary">
+      <Spinner size="big" />
+    </Alert>
+  );
 
-  if (result === "success") {
-    content = <Alert text="Account is activated" />;
-  } else if (result === "fail") {
-    content = <Alert type="danger" text="Activation failure" />;
-  }
+  // if (result === "success") {
+  //   content = <Alert text="Account is activated" />;
+  // } else if (result === "fail") {
+  //   content = <Alert type="danger" text="Activation failure" />;
+  // }
 
   return <div data-testid="activation-page">{content}</div>;
 };

@@ -25,7 +25,7 @@ class SignUpPage extends Component<WithTranslation> {
     email: "",
     password: "",
     passwordRepeat: "",
-    apiProgress: true,
+    apiProgress: false,
     signUpSuccess: false,
     errors: {
       username: "",
@@ -128,7 +128,7 @@ class SignUpPage extends Component<WithTranslation> {
           </form>
         )}
         {signUpSuccess && (
-          <Alert text="Please check your e-mail to activate your account" />
+          <Alert>Please check your e-mail to activate your account</Alert>
         )}
       </div>
     );
