@@ -18,16 +18,16 @@ export const AccountActivationPage = () => {
   }, [token]);
 
   let content = (
-    <Alert type="secondary">
+    <Alert type="secondary" center>
       <Spinner size="big" />
     </Alert>
   );
 
-  // if (result === "success") {
-  //   content = <Alert text="Account is activated" />;
-  // } else if (result === "fail") {
-  //   content = <Alert type="danger" text="Activation failure" />;
-  // }
+  if (result === "success") {
+    content = <Alert>Account is activated</Alert>;
+  } else if (result === "fail") {
+    content = <Alert type="danger">Activation failure</Alert>;
+  }
 
   return <div data-testid="activation-page">{content}</div>;
 };
