@@ -7,14 +7,16 @@ export const AccountActivationPage = () => {
   const [result, setResult] = useState<string>();
   const { token } = useParams();
   useEffect(() => {
-    setResult(undefined);
-    activate(token as string)
-      .then(() => {
+    async function activateRequest() {
+      setResult(undefined);
+      try {
+        await activate(token as string);
         setResult("success");
-      })
-      .catch(() => {
+      } catch (error) {
         setResult("fail");
-      });
+      }
+    }
+    activateRequest();
   }, [token]);
 
   let content = (
