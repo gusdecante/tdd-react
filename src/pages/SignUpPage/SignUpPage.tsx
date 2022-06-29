@@ -2,6 +2,7 @@ import { ChangeEvent, Component, FormEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { signUp } from "../../core/api/apiCalls";
 import { Alert, Input, Spinner } from "../../components/";
+import withHover from "../../components/layout";
 
 type ValidationErrorsProps = {
   username?: string;
@@ -135,6 +136,6 @@ class SignUpPage extends Component<WithTranslation> {
   }
 }
 
-const SignUpPageWithTranslation = withTranslation()(SignUpPage);
+const SignUpPageWithTranslation = withTranslation()(withHover(SignUpPage));
 
 export default SignUpPageWithTranslation;
