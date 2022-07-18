@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import withHover from "../../layout/withHover";
 import useHover from "../../../core/hooks/useHover";
@@ -7,10 +7,6 @@ const LangSelector = (props: any) => {
   const { i18n } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const on = useHover(ref.current);
-
-  useEffect(() => {
-    console.log(typeof ref);
-  }, []);
 
   let size = 24;
   if (on) {
