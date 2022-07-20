@@ -19,6 +19,6 @@ export const activate = (token: string) => {
   return axios.post(`/api/1.0/users/token/${token}`);
 };
 
-export const loadUsers = () => {
-  return axios.get("/api/1.0/users", { params: { page: 0, size: 3 } });
+export const loadUsers = (page?: number) => {
+  return axios.get("/api/1.0/users", { params: { page, size: 3 } });
 };
