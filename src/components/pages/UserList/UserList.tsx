@@ -10,12 +10,14 @@ export type UserData = {
 };
 
 type UserListResponse = {
-  page: {
-    content?: UserData[];
-    page: number;
-    size: number;
-    totalPages: number;
-  };
+  content?: UserData[];
+  page: number;
+  size: number;
+  totalPages: number;
+};
+
+type UserListProps = {
+  page: UserListResponse;
 };
 
 class UserList extends Component {
@@ -26,7 +28,7 @@ class UserList extends Component {
       size: 3,
       totalPages: 9,
     },
-  } as UserListResponse;
+  } as UserListProps;
 
   componentDidMount() {
     this.loadData();
@@ -48,8 +50,8 @@ class UserList extends Component {
           <h3>Users</h3>
         </div>
         <ul className="list-group list-group-flush">
-          {content?.map((user, index) => (
-            <UserListItem user={user} key={index} />
+          {content?.map((user) => (
+            <UserListItem user={user} key={user.id} />
           ))}
         </ul>
         <div className="card-footer">
