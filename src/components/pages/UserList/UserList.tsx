@@ -1,8 +1,8 @@
 import { Component, ReactNode } from "react";
 import { loadUsers } from "../../../core/api/apiCalls";
-import { Link } from "react-router-dom";
+import { UserListItem } from "./UserListItem/UserListItem";
 
-type UserData = {
+export type UserData = {
   id: number;
   username: string;
   email: string;
@@ -48,19 +48,9 @@ class UserList extends Component {
           <h3>Users</h3>
         </div>
         <ul className="list-group list-group-flush">
-          {content?.map((user, index) => {
-            return (
-              <li
-                className="list-group-item list-group-item-action"
-                key={index}
-                style={{
-                  cursor: "pointer",
-                }}
-              >
-                <Link to={`/user/${user.id}`}>{user.username}</Link>
-              </li>
-            );
-          })}
+          {content?.map((user, index) => (
+            <UserListItem user={user} key={index} />
+          ))}
         </ul>
         <div className="card-footer">
           {page !== 0 && (
