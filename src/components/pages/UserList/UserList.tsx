@@ -1,5 +1,6 @@
 import { Component, ReactNode } from "react";
 import { loadUsers } from "../../../core/api/apiCalls";
+import { Link } from "react-router-dom";
 
 type UserData = {
   id: number;
@@ -40,6 +41,7 @@ class UserList extends Component {
 
   render(): ReactNode {
     const { content, page, totalPages } = this.state.page;
+
     return (
       <div className="card">
         <div className="card-header text-center">
@@ -51,8 +53,11 @@ class UserList extends Component {
               <li
                 className="list-group-item list-group-item-action"
                 key={index}
+                style={{
+                  cursor: "pointer",
+                }}
               >
-                {user.username}
+                <Link to={`/user/${user.id}`}>{user.username}</Link>
               </li>
             );
           })}

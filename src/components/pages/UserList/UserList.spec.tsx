@@ -3,8 +3,9 @@ import { UserList } from "./";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import userEvent from "@testing-library/user-event";
+import { BrowserRouter as Router } from "react-router-dom";
 
-const users = [
+const jsonRespUsers = [
   {
     id: 1,
     username: "user1",
@@ -52,10 +53,10 @@ const users = [
 const getPage = (page: number, size: number) => {
   let start = page * size;
   let end = start + size;
-  const totalPages = Math.ceil(users.length / size);
+  const totalPages = Math.ceil(jsonRespUsers.length / size);
 
   return {
-    content: users.slice(start, end),
+    content: jsonRespUsers.slice(start, end),
     page,
     size,
     totalPages,
@@ -87,19 +88,27 @@ beforeAll(() => server.listen());
 
 afterAll(() => server.close());
 
+const setup = () => {
+  render(
+    <Router>
+      <UserList />
+    </Router>
+  );
+};
+
 describe("User List", () => {
   it("displays three users in list", async () => {
-    render(<UserList />);
+    setup();
     const users = await screen.findAllByText(/user/);
     expect(users.length).toBe(3);
   });
   it("displays next page link", async () => {
-    render(<UserList />);
+    setup();
     await screen.findByText("user1");
     expect(screen.getByText("next >")).toBeInTheDocument();
   });
   it("displays next page after clicking next", async () => {
-    render(<UserList />);
+    setup();
     await screen.findByText("user1");
     const nextPageLink = screen.getByText("next >");
     userEvent.click(nextPageLink);
@@ -107,7 +116,7 @@ describe("User List", () => {
     expect(firstUserOnPage2).toBeInTheDocument();
   });
   it("hides next page link at last page", async () => {
-    render(<UserList />);
+    setup();
     await screen.findByText("user1");
     userEvent.click(screen.queryByText("next >") as HTMLElement);
     await screen.findByText("user4");
@@ -117,13 +126,13 @@ describe("User List", () => {
     expect(screen.queryByText("next >") as HTMLElement).not.toBeInTheDocument();
   });
   it("does not diplay previous page link in first page", async () => {
-    render(<UserList />);
+    setup();
     await screen.findByText("user1");
     const previousPageLink = screen.queryByText("< previous") as HTMLElement;
     expect(previousPageLink).not.toBeInTheDocument();
   });
   it("diplays previous page link in second page", async () => {
-    render(<UserList />);
+    setup();
     await screen.findByText("user1");
     userEvent.click(screen.queryByText("next >") as HTMLElement);
     await screen.findByText("user4");
@@ -131,7 +140,7 @@ describe("User List", () => {
     expect(previousPageLink).toBeInTheDocument();
   });
   it("diplays previous page after clicking previous page link", async () => {
-    render(<UserList />);
+    setup();
     await screen.findByText("user1");
     userEvent.click(screen.queryByText("next >") as HTMLElement);
     await screen.findByText("user4");
