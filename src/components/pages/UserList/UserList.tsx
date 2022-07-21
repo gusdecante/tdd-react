@@ -1,4 +1,6 @@
 import { Component, ReactNode } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
+
 import { loadUsers } from "../../../core/api/apiCalls";
 import { UserListItem } from "./UserListItem/UserListItem";
 
@@ -20,7 +22,7 @@ type UserListProps = {
   page: UserListResponse;
 };
 
-class UserList extends Component {
+class UserList extends Component<WithTranslation> {
   state = {
     page: {
       content: [],
@@ -43,11 +45,12 @@ class UserList extends Component {
 
   render(): ReactNode {
     const { content, page, totalPages } = this.state.page;
+    const { t } = this.props;
 
     return (
       <div className="card">
         <div className="card-header text-center">
-          <h3>Users</h3>
+          <h3>{t("users")}</h3>
         </div>
         <ul className="list-group list-group-flush">
           {content?.map((user) => (
@@ -60,7 +63,7 @@ class UserList extends Component {
               className="btn btn-outline-secondary btn-sm"
               onClick={() => this.loadData(page - 1)}
             >
-              &lt; previous
+              {t("previousPage")}
             </button>
           )}
           {totalPages > page + 1 && (
@@ -68,7 +71,7 @@ class UserList extends Component {
               className="btn btn-outline-secondary btn-sm"
               onClick={() => this.loadData(page + 1)}
             >
-              next &gt;
+              {t("nextPage")}
             </button>
           )}
         </div>
@@ -77,4 +80,4 @@ class UserList extends Component {
   }
 }
 
-export default UserList;
+export default withTranslation()(UserList);
