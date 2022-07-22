@@ -156,6 +156,12 @@ describe("User List", () => {
       const firstUserOnFirtPage = await screen.findByText("user1");
       expect(firstUserOnFirtPage).toBeInTheDocument();
     });
+    it("displays spinner during the api call is in progress", async () => {
+      setup();
+      const spinner = screen.getByRole("status");
+      await screen.findByText("user1");
+      expect(spinner).not.toBeInTheDocument();
+    });
   });
   describe("Internationalization", () => {
     beforeEach(() => {
