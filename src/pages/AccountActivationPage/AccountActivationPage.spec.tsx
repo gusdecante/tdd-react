@@ -63,8 +63,7 @@ describe("Account Activation Page", () => {
 
   it("displays spinner during activation api call", async () => {
     setup("5678");
-    const spinner = screen.queryByRole("status");
-    expect(spinner).toBeInTheDocument();
+    const spinner = screen.getByRole("status");
     await screen.findByText("Activation failure");
     expect(spinner).not.toBeInTheDocument();
   });
@@ -75,8 +74,7 @@ describe("Account Activation Page", () => {
     await screen.findByText("Account is activated");
     jest.spyOn(Router, "useParams").mockReturnValue({ token: "5678" });
     rerender(<AccountActivationPage />);
-    const spinner = screen.queryByRole("status");
-    expect(spinner).toBeInTheDocument();
+    const spinner = screen.getByRole("status");
     await screen.findByText("Activation failure");
     expect(spinner).not.toBeInTheDocument();
   });
