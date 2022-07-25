@@ -43,4 +43,11 @@ describe("User Page", () => {
       expect(screen.getByText("user1")).toBeInTheDocument();
     });
   });
+  it("displays spinner while the api call is in progress", async () => {
+    jest.spyOn(Router, "useParams").mockReturnValue({ id: "1" });
+    render(<UserPage />);
+    const spinner = screen.getByRole("status");
+    await screen.findByText("user1");
+    expect(spinner).not.toBeInTheDocument();
+  });
 });
