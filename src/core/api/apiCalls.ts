@@ -22,3 +22,7 @@ export const activate = (token: string) => {
 export const loadUsers = (page?: number) => {
   return axios.get("/api/1.0/users", { params: { page, size: 3 } });
 };
+
+export const getUsersById = (id: number) => {
+  return axios.get(`/api/1.0/users/${id}`);
+};
