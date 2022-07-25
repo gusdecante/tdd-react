@@ -2,7 +2,7 @@ import { UserData } from "../UserList";
 import { Link } from "react-router-dom";
 import defaultProfileImage from "../../../../assets/profile.png";
 
-type UserListProps = {
+export type UserListProps = {
   user: UserData;
 };
 
