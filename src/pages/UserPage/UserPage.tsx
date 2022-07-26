@@ -8,6 +8,7 @@ import { Alert, Spinner } from "../../components";
 export const UserPage = () => {
   const [user, setUser] = useState<UserData>();
   const [pendingApiCall, setPendingApiCall] = useState(false);
+  const [failResponse, setFailResponse] = useState<string>();
   const { id } = useParams();
 
   useEffect(() => {
@@ -16,20 +17,31 @@ export const UserPage = () => {
       try {
         const response = await getUsersById(Number(id));
         setUser(response.data);
-      } catch (error) {}
+      } catch (error: any) {
+        setFailResponse(error.response.data.message);
+      }
       setPendingApiCall(false);
     };
     handleGetUserById();
   }, []);
 
-  return (
-    <div data-testid="user-page">
-      {!pendingApiCall && user && <ProfileCard user={user} />}
-      {pendingApiCall && (
-        <Alert type="secondary" center>
-          <Spinner size="big" />
-        </Alert>
-      )}
-    </div>
+  let content = (
+    <Alert type="secondary" center>
+      <Spinner size="big" />
+    </Alert>
   );
+
+  if (!pendingApiCall) {
+    if (failResponse) {
+      content = (
+        <Alert type="danger" center>
+          {failResponse}
+        </Alert>
+      );
+    } else {
+      if (user) content = <ProfileCard user={user} />;
+    }
+  }
+
+  return <div data-testid="user-page">{content}</div>;
 };
