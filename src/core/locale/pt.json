@@ -7,5 +7,6 @@
   "passwordMismatchValidation": "Senha não é igual",
   "users": "Usuários",
   "nextPage": "próxima >",
-  "previousPage": "< anterior"
+  "previousPage": "< anterior",
+  "login": "Login"
 }

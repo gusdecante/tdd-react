@@ -1,12 +1,15 @@
 import { FormEvent, useState, useEffect } from "react";
 import { Alert, Input, Spinner } from "../../components";
 import { login } from "../../core/api/apiCalls";
+import { useTranslation } from "react-i18next";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [apiProgress, setApiProgress] = useState(false);
   const [failMessage, setFailMessage] = useState();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     setFailMessage(undefined);
@@ -32,17 +35,17 @@ export const LoginPage = () => {
     >
       <form className="card">
         <div className="card-header">
-          <h1 className="text-center">Login</h1>
+          <h1 className="text-center">{t("login")}</h1>
         </div>
         <div className="card-body">
           <Input
             id="email"
-            label="E-mail"
+            label={t("email")}
             onChange={(event) => setEmail(event.target.value)}
           />
           <Input
             id="password"
-            label="Password"
+            label={t("password")}
             type="password"
             onChange={(event) => setPassword(event.target.value)}
           />
@@ -54,7 +57,7 @@ export const LoginPage = () => {
               onClick={submit}
             >
               {apiProgress && <Spinner />}
-              Login
+              {t("login")}
             </button>
           </div>
         </div>
