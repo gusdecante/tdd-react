@@ -1,9 +1,20 @@
-import { useState } from "react";
-import { Input } from "../../components";
+import { FormEvent, useState } from "react";
+import { Input, Spinner } from "../../components";
+import { login } from "../../core/api/apiCalls";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
+  const [apiProgress, setApiProgress] = useState(false);
+
+  const submit = async (event: FormEvent) => {
+    event.preventDefault();
+    setApiProgress(true);
+    try {
+      if (email && password) await login({ email, password });
+    } catch {}
+    setApiProgress(false);
+  };
 
   let disabled = !(email && password);
 
@@ -29,7 +40,12 @@ export const LoginPage = () => {
             onChange={(event) => setPassword(event.target.value)}
           />
           <div className="text-center">
-            <button className="btn btn-primary" disabled={disabled}>
+            <button
+              className="btn btn-primary"
+              disabled={disabled || apiProgress}
+              onClick={submit}
+            >
+              {apiProgress && <Spinner />}
               Login
             </button>
           </div>

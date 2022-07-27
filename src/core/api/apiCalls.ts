@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ILogin } from "../interface/ILogin";
 import i18n from "../locale/i18n";
 
 export interface ISignUp {
@@ -25,4 +26,8 @@ export const loadUsers = (page?: number) => {
 
 export const getUsersById = (id: number) => {
   return axios.get(`/api/1.0/users/${id}`);
+};
+
+export const login = (body: ILogin) => {
+  return axios.post("/api/1.0/auth", body);
 };
