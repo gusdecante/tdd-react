@@ -15,7 +15,7 @@ const server = setupServer(
   rest.post("/api/1.0/auth", (req, res, ctx) => {
     count += 1;
     requestBody = req.body;
-    return res(ctx.status(404));
+    return res(ctx.status(404), ctx.json({ message: "Incorrect credentials" }));
   })
 );
 
@@ -66,10 +66,12 @@ describe("Login Page", () => {
   });
   describe("Interactions", () => {
     let button: HTMLButtonElement;
+    let emailInput: HTMLElement;
+    let passwordInput: HTMLElement;
     const setup = () => {
       render(<LoginPage />);
-      const emailInput = screen.getByLabelText("E-mail");
-      const passwordInput = screen.getByLabelText("Password");
+      emailInput = screen.getByLabelText("E-mail");
+      passwordInput = screen.getByLabelText("Password");
 
       userEvent.type(emailInput, "user100@mail.com");
       userEvent.type(passwordInput, "P4ssword");
@@ -107,6 +109,26 @@ describe("Login Page", () => {
       const spinner = screen.getByRole("status");
       await waitForElementToBeRemoved(spinner);
       expect(count).toEqual(1);
+    });
+    it("displays authenticate fail message", async () => {
+      setup();
+      userEvent.click(button);
+      const errorMessage = await screen.findByText("Incorrect credentials");
+      expect(errorMessage).toBeInTheDocument();
+    });
+    it("clears authentication fail message when email field is changed", async () => {
+      setup();
+      userEvent.click(button);
+      const errorMessage = await screen.findByText("Incorrect credentials");
+      userEvent.type(emailInput, "new@mail.com");
+      expect(errorMessage).not.toBeInTheDocument();
+    });
+    it("clears authentication fail message when password field is changed", async () => {
+      setup();
+      userEvent.click(button);
+      const errorMessage = await screen.findByText("Incorrect credentials");
+      userEvent.type(passwordInput, "newP4ss");
+      expect(errorMessage).not.toBeInTheDocument();
     });
   });
 });
