@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestHeaders } from "axios";
 import { ILogin } from "../interface/ILogin";
 import i18n from "../locale/i18n";
 
@@ -8,12 +8,14 @@ export interface ISignUp {
   password: string;
 }
 
+axios.interceptors.request.use((request) => {
+  const headers = request.headers as AxiosRequestHeaders;
+  headers["Accept-Language"] = i18n.language;
+  return request;
+});
+
 export const signUp = (body: ISignUp) => {
-  return axios.post("/api/1.0/users", body, {
-    headers: {
-      "Accept-Language": i18n.language,
-    },
-  });
+  return axios.post("/api/1.0/users", body);
 };
 
 export const activate = (token: string) => {
