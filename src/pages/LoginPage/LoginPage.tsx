@@ -2,12 +2,14 @@ import { FormEvent, useState, useEffect } from "react";
 import { Alert, Input, Spinner } from "../../components";
 import { login } from "../../core/api/apiCalls";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [apiProgress, setApiProgress] = useState(false);
   const [failMessage, setFailMessage] = useState();
+  let navigate = useNavigate();
 
   const { t } = useTranslation();
 
@@ -20,6 +22,7 @@ export const LoginPage = () => {
     setApiProgress(true);
     try {
       if (email && password) await login({ email, password });
+      navigate("/", { replace: true });
     } catch (error: any) {
       setFailMessage(error.response.data.message);
     }
