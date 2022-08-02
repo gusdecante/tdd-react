@@ -1,15 +1,16 @@
+import { BrowserRouter as Router } from "react-router-dom";
 import {
   render,
   screen,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
-import { LoginPage } from "./index";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest, DefaultBodyType } from "msw";
 import { LanguageSelector } from "../../components";
 import en from "../../core/locale/en.json";
 import pt from "../../core/locale/pt.json";
+import { LoginPage } from "./index";
 
 let requestBody: DefaultBodyType;
 let count = 0;
@@ -33,35 +34,43 @@ beforeAll(() => server.listen());
 
 afterAll(() => server.close());
 
+const setupWithRouter = () => {
+  render(
+    <Router>
+      <LoginPage />
+    </Router>
+  );
+};
+
 describe("Login Page", () => {
   describe("Layout", () => {
     it("has header", () => {
-      render(<LoginPage />);
+      setupWithRouter();
       const header = screen.getByRole("heading", {
         name: "Login",
       });
       expect(header).toBeInTheDocument();
     });
     it("has email input", () => {
-      render(<LoginPage />);
+      setupWithRouter();
 
       const input = screen.getByLabelText("E-mail");
       expect(input).toBeInTheDocument();
     });
     it("has password input", () => {
-      render(<LoginPage />);
+      setupWithRouter();
 
       const input = screen.getByLabelText("Password");
       expect(input).toBeInTheDocument();
     });
     it("has password type for password input", () => {
-      render(<LoginPage />);
+      setupWithRouter();
 
       const input = screen.getByLabelText("Password") as HTMLInputElement;
       expect(input.type).toBe("password");
     });
     it("disables the button initially", () => {
-      render(<LoginPage />);
+      setupWithRouter();
 
       const button = screen.queryByRole("button", {
         name: "Login",
@@ -74,7 +83,7 @@ describe("Login Page", () => {
     let emailInput: HTMLElement;
     let passwordInput: HTMLElement;
     const setup = () => {
-      render(<LoginPage />);
+      setupWithRouter();
       emailInput = screen.getByLabelText("E-mail");
       passwordInput = screen.getByLabelText("Password");
       userEvent.type(emailInput, "user100@mail.com");
@@ -140,7 +149,9 @@ describe("Login Page", () => {
     const setup = () => {
       render(
         <>
-          <LoginPage />
+          <Router>
+            <LoginPage />
+          </Router>
           <LanguageSelector />
         </>
       );
