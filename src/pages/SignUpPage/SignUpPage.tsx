@@ -1,7 +1,7 @@
 import { ChangeEvent, Component, FormEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { signUp } from "../../core/api/apiCalls";
-import { Alert, Input, Spinner } from "../../components/";
+import { Alert, Input, ButtonWithProgress } from "../../components/";
 import withHover from "../../components/layout";
 
 type ValidationErrorsProps = {
@@ -116,14 +116,13 @@ class SignUpPage extends Component<WithTranslation> {
                 type="password"
               />
               <div className="text-center">
-                <button
-                  className="btn btn-primary"
-                  disabled={disabled || apiProgress}
+                <ButtonWithProgress
+                  disabled={disabled}
+                  apiProgress={apiProgress}
                   onClick={this.submit}
                 >
-                  {apiProgress && <Spinner />}
                   {t("signUp")}
-                </button>
+                </ButtonWithProgress>
               </div>
             </div>
           </form>

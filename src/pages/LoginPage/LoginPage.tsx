@@ -1,5 +1,5 @@
 import { FormEvent, useState, useEffect } from "react";
-import { Alert, Input, Spinner } from "../../components";
+import { Alert, Input, ButtonWithProgress } from "../../components";
 import { login } from "../../core/api/apiCalls";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -54,14 +54,13 @@ export const LoginPage = () => {
           />
           {failMessage && <Alert type="danger">{failMessage}</Alert>}
           <div className="text-center">
-            <button
-              className="btn btn-primary"
-              disabled={disabled || apiProgress}
+            <ButtonWithProgress
+              disabled={disabled}
+              apiProgress={apiProgress}
               onClick={submit}
             >
-              {apiProgress && <Spinner />}
               {t("login")}
-            </button>
+            </ButtonWithProgress>
           </div>
         </div>
       </form>
