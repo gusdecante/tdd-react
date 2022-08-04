@@ -1,10 +1,25 @@
-import { FormEvent, useState, useEffect } from "react";
+import React, {
+  FormEvent,
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { Alert, Input, ButtonWithProgress } from "../../components";
 import { login } from "../../core/api/apiCalls";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-export const LoginPage = () => {
+type AuthProps = {
+  isLoggedIn: boolean;
+  id: string;
+};
+
+interface ILoginPage {
+  onLoginSuccess?: Dispatch<SetStateAction<AuthProps>>;
+}
+
+export const LoginPage: React.FC<ILoginPage> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [apiProgress, setApiProgress] = useState(false);
@@ -21,8 +36,15 @@ export const LoginPage = () => {
     event.preventDefault();
     setApiProgress(true);
     try {
-      if (email && password) await login({ email, password });
-      navigate("/", { replace: true });
+      if (email && password) {
+        const response = await login({ email, password });
+        navigate("/", { replace: true });
+        const auth = {
+          isLoggedIn: true,
+          id: response.data.id,
+        };
+        onLoginSuccess && onLoginSuccess(auth);
+      }
     } catch (error: any) {
       setFailMessage(error.response.data.message);
     }
