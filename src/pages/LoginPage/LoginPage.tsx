@@ -10,7 +10,7 @@ import { login } from "../../core/api/apiCalls";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-type AuthProps = {
+export type AuthProps = {
   isLoggedIn: boolean;
   id: string;
 };
