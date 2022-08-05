@@ -4,14 +4,12 @@ import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import { HomePage, LoginPage, UserPage, AccountActivationPage } from "./pages";
 import { NavBar } from "./components";
 import { LanguageSelector } from "./components";
-import { useTranslation } from "react-i18next";
 
 function App() {
   const [auth, setAuth] = useState({
     isLoggedIn: false,
     id: "",
   });
-  const { t } = useTranslation();
 
   return (
     <Router>
