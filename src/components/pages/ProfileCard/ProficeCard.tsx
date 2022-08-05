@@ -1,7 +1,15 @@
+import React, { useContext } from "react";
+import { AuthContext } from "../../../App";
 import defaultProfileImage from "../../../assets/profile.png";
-import { UserListProps } from "../UserList/UserListItem/UserListItem";
+import { UserData } from "../UserList/UserList";
 
-const ProfileCard = ({ user }: UserListProps) => {
+interface IProfileCard {
+  user: UserData;
+}
+
+const ProfileCard: React.FC<IProfileCard> = ({ user }) => {
+  const auth = useContext(AuthContext);
+
   return (
     <div className="card text-center">
       <div className="card-header">
@@ -16,6 +24,7 @@ const ProfileCard = ({ user }: UserListProps) => {
       <div className="card-body">
         <h3>{user.username}</h3>
       </div>
+      {auth && user.id === Number(auth.id) && <button>Edit</button>}
     </div>
   );
 };
