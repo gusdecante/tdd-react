@@ -1,15 +1,12 @@
-import React from "react";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../../App";
 import logo from "../../../assets/hoaxify.png";
-import { AuthProps } from "../../../pages";
 
-interface INavBar {
-  auth: AuthProps;
-}
-
-export const NavBar: React.FC<INavBar> = ({ auth }) => {
+export const NavBar = () => {
   const { t } = useTranslation();
+  const auth = useContext(AuthContext);
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
