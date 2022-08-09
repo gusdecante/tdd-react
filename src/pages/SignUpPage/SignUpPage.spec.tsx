@@ -5,13 +5,12 @@ import {
   cleanup,
   waitFor,
   waitForElementToBeRemoved,
-} from "@testing-library/react";
+} from "../../core/test/setup";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { DefaultBodyType, rest } from "msw";
 import en from "../../core/locale/en.json";
 import pt from "../../core/locale/pt.json";
-import { LanguageSelector } from "../../components";
 
 let requestBody: DefaultBodyType;
 let counter = 0;
@@ -250,7 +249,6 @@ describe("SignUp Page", () => {
       render(
         <>
           <SignUpPage />
-          <LanguageSelector />
         </>
       );
 
