@@ -3,7 +3,7 @@ import { Alert, Input, ButtonWithProgress } from "../../components";
 import { login } from "../../core/api/apiCalls";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../App";
+import { AuthContext } from "../../core/context/AuthContext";
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>();

@@ -1,13 +1,11 @@
-import { BrowserRouter as Router } from "react-router-dom";
 import {
   render,
   screen,
   waitForElementToBeRemoved,
-} from "@testing-library/react";
+} from "../../core/test/setup";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest, DefaultBodyType } from "msw";
-import { LanguageSelector } from "../../components";
 import en from "../../core/locale/en.json";
 import pt from "../../core/locale/pt.json";
 import { LoginPage } from "./index";
@@ -35,11 +33,7 @@ beforeAll(() => server.listen());
 afterAll(() => server.close());
 
 const setupWithRouter = () => {
-  render(
-    <Router>
-      <LoginPage />
-    </Router>
-  );
+  render(<LoginPage />);
 };
 
 describe("Login Page", () => {
@@ -147,14 +141,7 @@ describe("Login Page", () => {
     let portugueseToggle: Element;
     let englishToggle: Element;
     const setup = () => {
-      render(
-        <>
-          <Router>
-            <LoginPage />
-          </Router>
-          <LanguageSelector />
-        </>
-      );
+      render(<LoginPage />);
 
       portugueseToggle = screen.getByTitle("Portuguese");
       englishToggle = screen.getByTitle("English");
