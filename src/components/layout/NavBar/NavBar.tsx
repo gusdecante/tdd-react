@@ -1,12 +1,12 @@
-import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../../core/context/AuthContext";
 import logo from "../../../assets/hoaxify.png";
+import { useSelector } from "react-redux";
+import { RootState } from "../../..";
 
 export const NavBar = () => {
   const { t } = useTranslation();
-  const auth = useContext(AuthContext);
+  const auth = useSelector((store: RootState) => store);
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
