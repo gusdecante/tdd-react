@@ -2,7 +2,7 @@ import App from "./App";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import { render, screen } from "./core/test/setup";
+import { cleanup, render, screen } from "./core/test/setup";
 
 const server = setupServer(
   rest.post("/api/1.0/users/token/:token", (_req, res, ctx) => {
@@ -42,11 +42,11 @@ const server = setupServer(
   })
 );
 
+beforeAll(() => server.listen());
+
 beforeEach(() => {
   server.resetHandlers();
 });
-
-beforeAll(() => server.listen());
 
 afterAll(() => server.close());
 
@@ -167,9 +167,7 @@ describe("Login", () => {
   });
   it("displays My Profile link on navbar after successful login", async () => {
     setup("/login");
-    const myProfileBeforeLogin = screen.queryByRole("link", {
-      name: "My Profile",
-    });
+    const myProfileBeforeLogin = screen.queryByTestId("not-logged");
     expect(myProfileBeforeLogin).not.toBeInTheDocument();
     userEvent.type(screen.getByLabelText("E-mail"), "user5@mail.com");
     userEvent.type(screen.getByLabelText("Password"), "P4ssword");

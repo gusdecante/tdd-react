@@ -1,16 +1,17 @@
 import { ReactNode, FC, ReactElement } from "react";
 import { render, RenderOptions } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
-import { AuthProvider } from "../context/AuthContext";
+import { Provider } from "react-redux";
 import { LanguageSelector } from "../../components";
+import { store } from "../redux/store";
 
 const RootWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <Router>
-      <AuthProvider>
+      <Provider store={store}>
         {children}
         <LanguageSelector />
-      </AuthProvider>
+      </Provider>
     </Router>
   );
 };

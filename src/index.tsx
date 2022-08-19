@@ -6,32 +6,11 @@ import "./core/locale/i18n";
 import { AuthProvider } from "./core/context/AuthContext";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
-import { configureStore, createSlice } from "@reduxjs/toolkit";
-
-const authSlice = createSlice({
-  name: "auth",
-  initialState: {
-    isLoggedIn: false,
-    id: "",
-  },
-  reducers: {
-    setTrue: (state) => {
-      state.isLoggedIn = true;
-    },
-  },
-});
-
-const store = configureStore({
-  reducer: authSlice.reducer,
-});
+import { store } from "./core/redux/store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
-
-export type RootState = ReturnType<typeof store.getState>;
-
-export const { setTrue } = authSlice.actions;
 
 root.render(
   <React.StrictMode>

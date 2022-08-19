@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/hoaxify.png";
 import { useSelector } from "react-redux";
-import { RootState } from "../../..";
+import { RootState } from "../../../core/redux/store";
 
 export const NavBar = () => {
   const { t } = useTranslation();
@@ -26,7 +26,11 @@ export const NavBar = () => {
               </Link>
             </>
           ) : (
-            <Link className="nav-link" to={`/user/${auth.id}`}>
+            <Link
+              data-testid={auth.isLoggedIn ? null : "not-logged"}
+              className="nav-link"
+              to={`/user/${auth.id}`}
+            >
               My Profile
             </Link>
           )}

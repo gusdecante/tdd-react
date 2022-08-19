@@ -1,16 +1,19 @@
-import React, { FormEvent, useState, useEffect, useContext } from "react";
+import React, { FormEvent, useState, useEffect } from "react";
 import { Alert, Input, ButtonWithProgress } from "../../components";
 import { login } from "../../core/api/apiCalls";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../core/context/AuthContext";
+import { useDispatch } from "react-redux";
+import { onLoginSuccess } from "../../core/redux/store";
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [apiProgress, setApiProgress] = useState(false);
   const [failMessage, setFailMessage] = useState();
-  const { onLoginSuccess } = useContext(AuthContext);
+
+  const dispatch = useDispatch();
+
   let navigate = useNavigate();
 
   const { t } = useTranslation();
@@ -26,10 +29,12 @@ export const LoginPage: React.FC = () => {
       if (email && password) {
         const response = await login({ email, password });
         navigate("/", { replace: true });
-        onLoginSuccess({
-          isLoggedIn: true,
-          id: response.data.id,
-        });
+        dispatch(
+          onLoginSuccess({
+            isLoggedIn: true,
+            id: response.data.id,
+          })
+        );
       }
     } catch (error: any) {
       setFailMessage(error.response.data.message);
