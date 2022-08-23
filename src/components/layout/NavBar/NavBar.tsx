@@ -4,8 +4,37 @@ import logo from "../../../assets/hoaxify.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../core/redux/store";
 
-export const NavBar = () => {
+const Wrapper: React.FC<RootState> = ({ isLoggedIn, id }) => {
   const { t } = useTranslation();
+
+  let content;
+
+  if (!isLoggedIn) {
+    content = (
+      <>
+        <Link className="nav-link" to="/signup">
+          {t("signUp")}
+        </Link>
+        <Link className="nav-link" to="/login">
+          {t("login")}
+        </Link>
+      </>
+    );
+  } else {
+    content = (
+      <Link
+        style={{ display: isLoggedIn ? "initial" : "none" }}
+        className="nav-link"
+        to={`/user/${id}`}
+      >
+        My Profile
+      </Link>
+    );
+  }
+  return content;
+};
+
+export const NavBar = () => {
   const auth = useSelector((store: RootState) => store);
 
   return (
@@ -16,24 +45,7 @@ export const NavBar = () => {
           Hoaxify
         </Link>
         <ul className="navbar-nav">
-          {!auth.isLoggedIn ? (
-            <>
-              <Link className="nav-link" to="/signup">
-                {t("signUp")}
-              </Link>
-              <Link className="nav-link" to="/login">
-                {t("login")}
-              </Link>
-            </>
-          ) : (
-            <Link
-              data-testid={auth.isLoggedIn ? null : "not-logged"}
-              className="nav-link"
-              to={`/user/${auth.id}`}
-            >
-              My Profile
-            </Link>
-          )}
+          <Wrapper {...auth} />
         </ul>
       </div>
     </nav>
