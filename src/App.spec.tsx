@@ -2,8 +2,9 @@ import App from "./App";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import { cleanup, render, screen } from "./core/test/setup";
+import { render, screen } from "./core/test/setup";
 import { AuthProps } from "./core/redux/store";
+import { storage } from "./core/redux/storage";
 
 const server = setupServer(
   rest.post("/api/1.0/users/token/:token", (_req, res, ctx) => {
@@ -195,11 +196,11 @@ describe("Login", () => {
   it("stores logged in state in local storage", async () => {
     setupLoggedIn();
     await screen.findByTestId("home-page");
-    const state: AuthProps = JSON.parse(localStorage.getItem("auth") as string);
+    const state: AuthProps = storage.getItem("auth");
     expect(state.isLoggedIn).toBeTruthy();
   });
   it("displays layout of logged in state", () => {
-    localStorage.setItem("auth", JSON.stringify({ isLoggedIn: true }));
+    storage.setItem("auth", { isLoggedIn: true });
     setup("/");
     const myProfileLink = screen.queryByRole("link", {
       name: "My Profile",

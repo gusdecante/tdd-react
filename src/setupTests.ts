@@ -5,10 +5,11 @@
 import "@testing-library/jest-dom/extend-expect";
 import { act } from "react-dom/test-utils";
 import i18n from "./core/locale/i18n";
+import { storage } from "./core/redux/storage";
 
 afterEach(() => {
   act(() => {
     i18n.changeLanguage("en");
   });
-  localStorage.clear();
+  storage.clear();
 });

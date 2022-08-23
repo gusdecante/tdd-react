@@ -4,6 +4,7 @@ import {
   SliceCaseReducers,
 } from "@reduxjs/toolkit";
 import { reducers } from "./reducers";
+import { storage } from "./storage";
 
 export type AuthProps = {
   isLoggedIn: boolean;
@@ -11,18 +12,10 @@ export type AuthProps = {
 };
 
 const createStore = () => {
-  let initialState = {
+  let initialState = storage.getItem("auth") || {
     isLoggedIn: false,
     id: undefined,
   };
-
-  const storedState = localStorage.getItem("auth");
-
-  if (storedState !== null) {
-    try {
-      initialState = JSON.parse(storedState);
-    } catch (err) {}
-  }
 
   const authSlice = createSlice<AuthProps, SliceCaseReducers<AuthProps>>({
     name: "auth",
@@ -34,10 +27,8 @@ const createStore = () => {
     reducer: authSlice.reducer,
   });
 
-  // console.log(initialState);
-
   store.subscribe(() => {
-    localStorage.setItem("auth", JSON.stringify(store.getState()));
+    storage.setItem("auth", store.getState());
   });
 
   return {
