@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import { cleanup, render, screen } from "./core/test/setup";
+import { AuthProps } from "./core/redux/store";
 
 const server = setupServer(
   rest.post("/api/1.0/users/token/:token", (_req, res, ctx) => {
@@ -37,16 +38,16 @@ const server = setupServer(
       })
     );
   }),
-  rest.post("/api/1.0/auth", (req, res, ctx) => {
+  rest.post("/api/1.0/auth", (_req, res, ctx) => {
     return res(ctx.status(200), ctx.json({ id: 5, username: "user5" }));
   })
 );
 
-beforeAll(() => server.listen());
-
 beforeEach(() => {
   server.resetHandlers();
 });
+
+beforeAll(() => server.listen());
 
 afterAll(() => server.close());
 
@@ -107,7 +108,7 @@ describe("Routing", () => {
     ${"Home"}
     ${"Sign Up"}
     ${"Login"}
-  `("has link to $tagetPage on NavBar", ({ targetPage }) => {
+  `("has link to $targetPage on NavBar", ({ targetPage }) => {
     setup("/");
     const link = screen.getByRole("link", { name: targetPage });
     expect(link).toBeInTheDocument();
@@ -151,6 +152,21 @@ describe("Login", () => {
     userEvent.type(screen.getByLabelText("Password"), "P4ssword");
     userEvent.click(screen.getByRole("button", { name: "Login" }));
   };
+  it("displays My Profile link on navbar after successful login", async () => {
+    setup("/login");
+    const myProfileBeforeLogin = screen.queryByRole("link", {
+      name: "My Profile",
+    });
+    expect(myProfileBeforeLogin).not.toBeInTheDocument();
+    userEvent.type(screen.getByLabelText("E-mail"), "user5@mail.com");
+    userEvent.type(screen.getByLabelText("Password"), "P4ssword");
+    userEvent.click(screen.getByRole("button", { name: "Login" }));
+    await screen.findByTestId("home-page");
+    const myProfileAfterLogin = screen.queryByRole("link", {
+      name: "My Profile",
+    });
+    expect(myProfileAfterLogin).toBeInTheDocument();
+  });
   it("redirects to homepage after successful login", async () => {
     setupLoggedIn();
     const page = await screen.findByTestId("home-page");
@@ -165,19 +181,6 @@ describe("Login", () => {
     expect(loginLink).not.toBeInTheDocument();
     expect(signUpLink).not.toBeInTheDocument();
   });
-  it("displays My Profile link on navbar after successful login", async () => {
-    setup("/login");
-    const myProfileBeforeLogin = screen.queryByTestId("not-logged");
-    expect(myProfileBeforeLogin).not.toBeInTheDocument();
-    userEvent.type(screen.getByLabelText("E-mail"), "user5@mail.com");
-    userEvent.type(screen.getByLabelText("Password"), "P4ssword");
-    userEvent.click(screen.getByRole("button", { name: "Login" }));
-    await screen.findByTestId("home-page");
-    const myProfileAfterLogin = screen.queryByRole("link", {
-      name: "My Profile",
-    });
-    expect(myProfileAfterLogin).toBeInTheDocument();
-  });
   it("displays user page with logged in user id in url after clicking My Profile link", async () => {
     setupLoggedIn();
     await screen.findByTestId("home-page");
@@ -188,6 +191,20 @@ describe("Login", () => {
     await screen.findByTestId("user-page");
     const username = await screen.findByText("user5");
     expect(username).toBeInTheDocument();
+  });
+  it("stores logged in state in local storage", async () => {
+    setupLoggedIn();
+    await screen.findByTestId("home-page");
+    const state: AuthProps = JSON.parse(localStorage.getItem("auth") as string);
+    expect(state.isLoggedIn).toBeTruthy();
+  });
+  it("displays layout of logged in state", () => {
+    localStorage.setItem("auth", JSON.stringify({ isLoggedIn: true }));
+    setup("/");
+    const myProfileLink = screen.queryByRole("link", {
+      name: "My Profile",
+    });
+    expect(myProfileLink).toBeInTheDocument();
   });
 });
 
