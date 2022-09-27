@@ -3,15 +3,8 @@ const setItem = (key: string, value: object) => {
 };
 
 const getItem = (key: string) => {
-  const storedState = localStorage.getItem(key);
-
-  if (!storedState) return null;
-
-  try {
-    return JSON.parse(storedState);
-  } catch (err) {
-    return storedState;
-  }
+  const storageItem = localStorage.getItem(key);
+  return storageItem ? JSON.parse(storageItem) : undefined;
 };
 
 const clear = () => {

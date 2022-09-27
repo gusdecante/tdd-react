@@ -196,7 +196,7 @@ describe("Login", () => {
   it("stores logged in state in local storage", async () => {
     setupLoggedIn();
     await screen.findByTestId("home-page");
-    const state: AuthProps = storage.getItem("auth");
+    const state = storage.getItem("auth");
     expect(state.isLoggedIn).toBeTruthy();
   });
   it("displays layout of logged in state", () => {

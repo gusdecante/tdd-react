@@ -22,11 +22,7 @@ const Wrapper: React.FC<RootState> = ({ isLoggedIn, id }) => {
     );
   } else {
     content = (
-      <Link
-        style={{ display: isLoggedIn ? "initial" : "none" }}
-        className="nav-link"
-        to={`/user/${id}`}
-      >
+      <Link className="nav-link" to={`/user/${id}`}>
         My Profile
       </Link>
     );

@@ -39,7 +39,7 @@ export const UserPage = () => {
         </Alert>
       );
     } else {
-      if (user) content = <ProfileCard user={user} />;
+      if (user) content = <ProfileCard {...user} />;
     }
   }
 

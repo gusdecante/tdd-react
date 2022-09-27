@@ -9,6 +9,7 @@ import { rest, DefaultBodyType } from "msw";
 import en from "../../core/locale/en.json";
 import pt from "../../core/locale/pt.json";
 import { LoginPage } from "./index";
+import { storage } from "../../core/redux/storage";
 
 let requestBody: DefaultBodyType;
 let count = 0;
@@ -19,7 +20,7 @@ const server = setupServer(
     requestBody = req.body;
     count += 1;
     acceptLanguageHeader = req.headers.get("Accept-Language");
-    return res(ctx.status(404), ctx.json({ message: "Incorrect credentials" }));
+    return res(ctx.status(401), ctx.json({ message: "Incorrect credentials" }));
   })
 );
 
@@ -32,6 +33,17 @@ beforeAll(() => server.listen());
 
 afterAll(() => server.close());
 
+const loginSuccess = rest.post("/api/1.0/auth", (req, res, ctx) => {
+  return res(
+    ctx.status(200),
+    ctx.json({
+      id: 5,
+      username: "user5",
+      image: null,
+      token: "abcdefgh",
+    })
+  );
+});
 const setupWithRouter = () => {
   render(<LoginPage />);
 };
@@ -76,11 +88,11 @@ describe("Login Page", () => {
     let button: HTMLButtonElement;
     let emailInput: HTMLElement;
     let passwordInput: HTMLElement;
-    const setup = () => {
+    const setup = (email = "user100@mail.com") => {
       setupWithRouter();
       emailInput = screen.getByLabelText("E-mail");
       passwordInput = screen.getByLabelText("Password");
-      userEvent.type(emailInput, "user100@mail.com");
+      userEvent.type(emailInput, email);
       userEvent.type(passwordInput, "P4ssword");
       button = screen.queryByRole("button", {
         name: "Login",
@@ -135,6 +147,29 @@ describe("Login Page", () => {
       const errorMessage = await screen.findByText("Incorrect credentials");
       userEvent.type(passwordInput, "newP4ss");
       expect(errorMessage).not.toBeInTheDocument();
+    });
+    it("stores id, username and image in storage", async () => {
+      server.use(loginSuccess);
+
+      setup("user5@mail.com");
+      userEvent.click(button);
+      const spinner = screen.queryByRole("status");
+      await waitForElementToBeRemoved(spinner);
+      const storadeState = storage.getItem("auth");
+      const objectFields = Object.keys(storadeState);
+      expect(objectFields.includes("id")).toBeTruthy();
+      expect(objectFields.includes("username")).toBeTruthy();
+      expect(objectFields.includes("image")).toBeTruthy();
+    });
+    it("stores authorization header value in storage", async () => {
+      server.use(loginSuccess);
+
+      setup("user5@mail.com");
+      userEvent.click(button);
+      const spinner = screen.queryByRole("status");
+      await waitForElementToBeRemoved(spinner);
+      const storadeState = storage.getItem("auth");
+      expect(storadeState.header).toBe("Bearer abcdefgh");
     });
   });
   describe("Intenationalization", () => {

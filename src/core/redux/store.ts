@@ -9,12 +9,16 @@ import { storage } from "./storage";
 export type AuthProps = {
   isLoggedIn: boolean;
   id?: number;
+  username?: string;
+  image?: string;
+  header?: string;
 };
 
-const createStore = () => {
-  let initialState = storage.getItem("auth") || {
+export const createStore = () => {
+  const initialState = storage.getItem("auth") || {
     isLoggedIn: false,
     id: undefined,
+    image: null,
   };
 
   const authSlice = createSlice<AuthProps, SliceCaseReducers<AuthProps>>({

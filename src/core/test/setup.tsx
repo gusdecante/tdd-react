@@ -3,9 +3,10 @@ import { render, RenderOptions } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { LanguageSelector } from "../../components";
-import { store } from "../redux/store";
+import { createStore } from "../redux/store";
 
 const RootWrapper: FC<{ children: ReactNode }> = ({ children }) => {
+  const { store } = createStore();
   return (
     <Router>
       <Provider store={store}>

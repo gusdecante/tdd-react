@@ -32,7 +32,8 @@ export const LoginPage: React.FC = () => {
         dispatch(
           onLoginSuccess({
             isLoggedIn: true,
-            id: response.data.id,
+            ...response.data,
+            header: `Bearer ${response.data.token}`,
           })
         );
       }
