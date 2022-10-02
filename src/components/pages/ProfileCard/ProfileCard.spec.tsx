@@ -39,4 +39,17 @@ describe("Profile card", () => {
     userEvent.click(screen.getByRole("button", { name: "Edit" }));
     expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
   });
+  it("hides Edit button and username header in edit mode", () => {
+    setup();
+    userEvent.click(screen.getByRole("button", { name: "Edit" }));
+    expect(
+      screen.queryByRole("heading", { name: "user5" })
+    ).not.toBeInTheDocument();
+  });
+  it("has the current username in input", () => {
+    setup();
+    userEvent.click(screen.getByRole("button", { name: "Edit" }));
+    const input = screen.queryByLabelText("Change your username");
+    expect(input).toHaveValue("user5");
+  });
 });

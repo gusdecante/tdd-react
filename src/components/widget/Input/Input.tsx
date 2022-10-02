@@ -6,6 +6,7 @@ type InputProps = {
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   help?: string;
   type?: string;
+  initialValue?: string;
 };
 
 export const Input: React.FC<InputProps> = ({
@@ -14,6 +15,7 @@ export const Input: React.FC<InputProps> = ({
   onChange,
   help,
   type = "text",
+  initialValue,
 }) => {
   let inputClass = "form-control";
   if (help) {
@@ -25,7 +27,13 @@ export const Input: React.FC<InputProps> = ({
       <label htmlFor={id} className="form-label">
         {label}
       </label>
-      <input id={id} onChange={onChange} className={inputClass} type={type} />
+      <input
+        id={id}
+        onChange={onChange}
+        className={inputClass}
+        type={type}
+        defaultValue={initialValue}
+      />
       <span data-testid="help-message" className="invalid-feedback">
         {help}
       </span>
