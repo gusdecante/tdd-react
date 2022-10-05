@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import { render, screen } from "./core/test/setup";
-import { AuthProps } from "./core/redux/store";
 import { storage } from "./core/redux/storage";
 
 const server = setupServer(
@@ -51,6 +50,8 @@ beforeEach(() => {
 beforeAll(() => server.listen());
 
 afterAll(() => server.close());
+
+const user = userEvent.setup();
 
 const setup = (path: string) => {
   window.history.pushState({}, "", path);
@@ -122,36 +123,37 @@ describe("Routing", () => {
     ${"/signup"} | ${"Login"}   | ${"login-page"}
   `(
     "displays $visiblePage after clicking $clickingTo",
-    ({ initialPath, clickInto, visiblePage }) => {
+    async ({ initialPath, clickInto, visiblePage }) => {
       setup(initialPath);
       const link = screen.getByRole("link", { name: clickInto });
-      userEvent.click(link);
+      await user.click(link);
       expect(screen.getByTestId(visiblePage)).toBeInTheDocument();
     }
   );
 
-  it("displays home page when clicking brand logo", () => {
+  it("displays home page when clicking brand logo", async () => {
     setup("/login");
     const logo = screen.queryByAltText("Hoaxify") as HTMLImageElement;
-    userEvent.click(logo);
+    await user.click(logo);
     expect(screen.getByTestId("home-page")).toBeInTheDocument();
   });
 
   it("navigates to user page when clicking the username on list", async () => {
     setup("/");
-    const user = await screen.findByText("user-in-list");
-    userEvent.click(user);
+
+    const nickname = await screen.findByText("user-in-list");
+    await user.click(nickname);
     const page = await screen.findByTestId("user-page");
     expect(page).toBeInTheDocument();
   });
 });
 
 describe("Login", () => {
-  const setupLoggedIn = () => {
+  const setupLoggedIn = async () => {
     setup("/login");
-    userEvent.type(screen.getByLabelText("E-mail"), "user5@mail.com");
-    userEvent.type(screen.getByLabelText("Password"), "P4ssword");
-    userEvent.click(screen.getByRole("button", { name: "Login" }));
+    await user.type(screen.getByLabelText("E-mail"), "user5@mail.com");
+    await user.type(screen.getByLabelText("Password"), "P4ssword");
+    await user.click(screen.getByRole("button", { name: "Login" }));
   };
   it("displays My Profile link on navbar after successful login", async () => {
     setup("/login");
@@ -159,9 +161,9 @@ describe("Login", () => {
       name: "My Profile",
     });
     expect(myProfileBeforeLogin).not.toBeInTheDocument();
-    userEvent.type(screen.getByLabelText("E-mail"), "user5@mail.com");
-    userEvent.type(screen.getByLabelText("Password"), "P4ssword");
-    userEvent.click(screen.getByRole("button", { name: "Login" }));
+    await user.type(screen.getByLabelText("E-mail"), "user5@mail.com");
+    await user.type(screen.getByLabelText("Password"), "P4ssword");
+    await user.click(screen.getByRole("button", { name: "Login" }));
     await screen.findByTestId("home-page");
     const myProfileAfterLogin = screen.queryByRole("link", {
       name: "My Profile",
@@ -169,13 +171,13 @@ describe("Login", () => {
     expect(myProfileAfterLogin).toBeInTheDocument();
   });
   it("redirects to homepage after successful login", async () => {
-    setupLoggedIn();
+    await setupLoggedIn();
     const page = await screen.findByTestId("home-page");
     expect(page).toBeInTheDocument();
   });
 
   it("hides Login and Sign Up from navbar after successful login", async () => {
-    setupLoggedIn();
+    await setupLoggedIn();
     await screen.findByTestId("home-page");
     const loginLink = screen.queryByRole("link", { name: "Login" });
     const signUpLink = screen.queryByRole("link", { name: "Sign Up" });
@@ -183,12 +185,12 @@ describe("Login", () => {
     expect(signUpLink).not.toBeInTheDocument();
   });
   it("displays user page with logged in user id in url after clicking My Profile link", async () => {
-    setupLoggedIn();
+    await setupLoggedIn();
     await screen.findByTestId("home-page");
     const myProfileLink = screen.queryByRole("link", {
       name: "My Profile",
     }) as HTMLElement;
-    userEvent.click(myProfileLink);
+    await user.click(myProfileLink);
     await screen.findByTestId("user-page");
     const username = await screen.findByText("user5");
     expect(username).toBeInTheDocument();

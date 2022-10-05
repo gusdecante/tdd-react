@@ -92,6 +92,8 @@ beforeAll(() => server.listen());
 
 afterAll(() => server.close());
 
+const user = userEvent.setup();
+
 const setup = () => {
   render(
     <Router>
@@ -117,16 +119,16 @@ describe("User List", () => {
       setup();
       await screen.findByText("user1");
       const nextPageLink = screen.getByText("next >");
-      userEvent.click(nextPageLink);
+      await user.click(nextPageLink);
       const firstUserOnPage2 = await screen.findByText("user4");
       expect(firstUserOnPage2).toBeInTheDocument();
     });
     it("hides next page link at last page", async () => {
       setup();
       await screen.findByText("user1");
-      userEvent.click(screen.queryByText("next >") as HTMLElement);
+      await user.click(screen.queryByText("next >") as HTMLElement);
       await screen.findByText("user4");
-      userEvent.click(screen.queryByText("next >") as HTMLElement);
+      await user.click(screen.queryByText("next >") as HTMLElement);
       await screen.findByText("user7");
 
       expect(
@@ -142,7 +144,7 @@ describe("User List", () => {
     it("diplays previous page link in second page", async () => {
       setup();
       await screen.findByText("user1");
-      userEvent.click(screen.queryByText("next >") as HTMLElement);
+      await user.click(screen.queryByText("next >") as HTMLElement);
       await screen.findByText("user4");
       const previousPageLink = screen.queryByText("< previous") as HTMLElement;
       expect(previousPageLink).toBeInTheDocument();
@@ -150,9 +152,9 @@ describe("User List", () => {
     it("diplays previous page after clicking previous page link", async () => {
       setup();
       await screen.findByText("user1");
-      userEvent.click(screen.queryByText("next >") as HTMLElement);
+      await user.click(screen.queryByText("next >") as HTMLElement);
       await screen.findByText("user4");
-      userEvent.click(screen.queryByText("< previous") as HTMLElement);
+      await user.click(screen.queryByText("< previous") as HTMLElement);
       const firstUserOnFirtPage = await screen.findByText("user1");
       expect(firstUserOnFirtPage).toBeInTheDocument();
     });
@@ -181,7 +183,7 @@ describe("User List", () => {
     it("displays header and navigation links in portuguese after selection the language", async () => {
       setup();
       await screen.findByText("user4");
-      userEvent.click(screen.getByTitle("Portuguese"));
+      await user.click(screen.getByTitle("Portuguese"));
       expect(screen.getByText(pt.users)).toBeInTheDocument();
       expect(screen.getByText(pt.nextPage)).toBeInTheDocument();
       expect(screen.getByText(pt.previousPage)).toBeInTheDocument();

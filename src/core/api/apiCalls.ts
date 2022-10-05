@@ -33,3 +33,7 @@ export const getUsersById = (id: number) => {
 export const login = (body: ILogin) => {
   return axios.post("/api/1.0/auth", body);
 };
+
+export const updateUser = (id: number) => {
+  return axios.put(`/api/1.0/users/${id}`);
+};

@@ -33,6 +33,8 @@ beforeAll(() => server.listen());
 
 afterAll(() => server.close());
 
+const user = userEvent.setup();
+
 const loginSuccess = rest.post("/api/1.0/auth", (req, res, ctx) => {
   return res(
     ctx.status(200),
@@ -88,31 +90,31 @@ describe("Login Page", () => {
     let button: HTMLButtonElement;
     let emailInput: HTMLElement;
     let passwordInput: HTMLElement;
-    const setup = (email = "user100@mail.com") => {
+    const setup = async (email = "user100@mail.com") => {
       setupWithRouter();
       emailInput = screen.getByLabelText("E-mail");
       passwordInput = screen.getByLabelText("Password");
-      userEvent.type(emailInput, email);
-      userEvent.type(passwordInput, "P4ssword");
+      await user.type(emailInput, email);
+      await user.type(passwordInput, "P4ssword");
       button = screen.queryByRole("button", {
         name: "Login",
       }) as HTMLButtonElement;
     };
-    it("enables the button when email and password inputs are filled", () => {
-      setup();
+    it("enables the button when email and password inputs are filled", async () => {
+      await setup();
       expect(button.disabled).toBe(false);
     });
 
     it("displays spinner during api call", async () => {
-      setup();
+      await setup();
       expect(screen.queryByRole("status")).not.toBeInTheDocument();
-      userEvent.click(button);
+      await user.click(button);
       const spinner = screen.getByRole("status");
       await waitForElementToBeRemoved(spinner);
     });
     it("sends email and password to backend after clicking the button", async () => {
-      setup();
-      userEvent.click(button);
+      await setup();
+      await user.click(button);
       const spinner = screen.getByRole("status");
       await waitForElementToBeRemoved(spinner);
       expect(requestBody).toEqual({
@@ -121,38 +123,38 @@ describe("Login Page", () => {
       });
     });
     it("disables the button when there is an api call", async () => {
-      setup();
-      userEvent.click(button);
-      userEvent.click(button);
+      await setup();
+      await user.click(button);
+      expect(button).toHaveProperty("disabled", true);
       const spinner = screen.getByRole("status");
       await waitForElementToBeRemoved(spinner);
       expect(count).toEqual(1);
     });
     it("displays authenticate fail message", async () => {
-      setup();
-      userEvent.click(button);
+      await setup();
+      await user.click(button);
       const errorMessage = await screen.findByText("Incorrect credentials");
       expect(errorMessage).toBeInTheDocument();
     });
     it("clears authentication fail message when email field is changed", async () => {
-      setup();
-      userEvent.click(button);
+      await setup();
+      await user.click(button);
       const errorMessage = await screen.findByText("Incorrect credentials");
-      userEvent.type(emailInput, "new@mail.com");
+      await user.type(emailInput, "new@mail.com");
       expect(errorMessage).not.toBeInTheDocument();
     });
     it("clears authentication fail message when password field is changed", async () => {
-      setup();
-      userEvent.click(button);
+      await setup();
+      await user.click(button);
       const errorMessage = await screen.findByText("Incorrect credentials");
-      userEvent.type(passwordInput, "newP4ss");
+      await user.type(passwordInput, "newP4ss");
       expect(errorMessage).not.toBeInTheDocument();
     });
     it("stores id, username and image in storage", async () => {
       server.use(loginSuccess);
 
-      setup("user5@mail.com");
-      userEvent.click(button);
+      await setup("user5@mail.com");
+      await user.click(button);
       const spinner = screen.queryByRole("status");
       await waitForElementToBeRemoved(spinner);
       const storadeState = storage.getItem("auth");
@@ -164,8 +166,8 @@ describe("Login Page", () => {
     it("stores authorization header value in storage", async () => {
       server.use(loginSuccess);
 
-      setup("user5@mail.com");
-      userEvent.click(button);
+      await setup("user5@mail.com");
+      await user.click(button);
       const spinner = screen.queryByRole("status");
       await waitForElementToBeRemoved(spinner);
       const storadeState = storage.getItem("auth");
@@ -194,10 +196,10 @@ describe("Login Page", () => {
       expect(screen.getByLabelText(en.email)).toBeInTheDocument();
       expect(screen.getByLabelText(en.password)).toBeInTheDocument();
     });
-    it("displays all text in Portuguese after changing the language", () => {
+    it("displays all text in Portuguese after changing the language", async () => {
       setup();
 
-      userEvent.click(portugueseToggle);
+      await user.click(portugueseToggle);
 
       expect(
         screen.getByRole("heading", { name: pt.login })
@@ -212,12 +214,13 @@ describe("Login Page", () => {
       setup();
       const emailInput = screen.getByLabelText("E-mail");
       const passwordInput = screen.getByLabelText("Password");
-      userEvent.type(emailInput, "user100@mail.com");
-      userEvent.type(passwordInput, "P4ssword");
-      const button = screen.queryByRole("button", {
-        name: "Login",
-      }) as HTMLButtonElement;
-      userEvent.click(button);
+      await user.type(emailInput, "user100@mail.com");
+      await user.type(passwordInput, "P4ssword");
+      await user.click(
+        screen.getByRole("button", {
+          name: "Login",
+        })
+      );
       const spinner = screen.getByRole("status");
       await waitForElementToBeRemoved(spinner);
       expect(acceptLanguageHeader).toBe("en");
@@ -226,13 +229,13 @@ describe("Login Page", () => {
       setup();
       const emailInput = screen.getByLabelText("E-mail");
       const passwordInput = screen.getByLabelText("Password");
-      userEvent.type(emailInput, "user100@mail.com");
-      userEvent.type(passwordInput, "P4ssword");
+      await user.type(emailInput, "user100@mail.com");
+      await user.type(passwordInput, "P4ssword");
       const button = screen.queryByRole("button", {
         name: "Login",
       }) as HTMLButtonElement;
-      userEvent.click(portugueseToggle);
-      userEvent.click(button);
+      await user.click(portugueseToggle);
+      await user.click(button);
       const spinner = screen.getByRole("status");
       await waitForElementToBeRemoved(spinner);
       expect(acceptLanguageHeader).toBe("pt");
