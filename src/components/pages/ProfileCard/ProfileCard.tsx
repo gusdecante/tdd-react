@@ -10,18 +10,22 @@ export interface IProfileCard {
   id: number;
 }
 
-const ProfileCard: React.FC<IProfileCard> = ({ username, id }) => {
+const ProfileCard: React.FC<IProfileCard> = (props) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [apiProgress, setApiProgress] = useState(false);
+  const [newUsername, setNewUsername] = useState<string>(props.username);
 
-  const auth = useSelector((store: RootState) => store);
+  const { id, header } = useSelector((store: RootState) => ({
+    id: store.id,
+    header: store.header,
+  }));
 
-  const isCurrentUser = id === Number(auth.id);
+  const isCurrentUser = props.id === Number(id);
 
   const onClickSave = async () => {
     setApiProgress(true);
     try {
-      await updateUser(id);
+      await updateUser(props.id, { username: newUsername }, header as string);
     } catch (error) {}
     setApiProgress(false);
   };
@@ -34,7 +38,8 @@ const ProfileCard: React.FC<IProfileCard> = ({ username, id }) => {
         <Input
           label="Change your username"
           id="username"
-          initialValue={username}
+          initialValue={props.username}
+          onChange={(event) => setNewUsername(event.target.value)}
         />
         <ButtonWithProgress apiProgress={apiProgress} onClick={onClickSave}>
           Save
@@ -45,7 +50,7 @@ const ProfileCard: React.FC<IProfileCard> = ({ username, id }) => {
   } else {
     content = (
       <>
-        <h3>{username}</h3>
+        <h3>{props.username}</h3>
         {isCurrentUser && !isEditMode && (
           <button
             className="btn btn-outline-success"

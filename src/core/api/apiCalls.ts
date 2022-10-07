@@ -1,5 +1,5 @@
 import axios, { AxiosRequestHeaders } from "axios";
-import { ILogin } from "../interface/ILogin";
+import { ILogin, IUserRequestBody } from "../interface";
 import i18n from "../locale/i18n";
 
 export interface ISignUp {
@@ -34,6 +34,14 @@ export const login = (body: ILogin) => {
   return axios.post("/api/1.0/auth", body);
 };
 
-export const updateUser = (id: number) => {
-  return axios.put(`/api/1.0/users/${id}`);
+export const updateUser = (
+  id: number,
+  body: IUserRequestBody,
+  header: string
+) => {
+  return axios.put(`/api/1.0/users/${id}`, body, {
+    headers: {
+      Authorization: header,
+    },
+  });
 };
