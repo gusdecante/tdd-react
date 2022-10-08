@@ -26,6 +26,7 @@ const ProfileCard: React.FC<IProfileCard> = (props) => {
     setApiProgress(true);
     try {
       await updateUser(props.id, { username: newUsername }, header as string);
+      setIsEditMode(false);
     } catch (error) {}
     setApiProgress(false);
   };
@@ -38,7 +39,7 @@ const ProfileCard: React.FC<IProfileCard> = (props) => {
         <Input
           label="Change your username"
           id="username"
-          initialValue={props.username}
+          initialValue={newUsername}
           onChange={(event) => setNewUsername(event.target.value)}
         />
         <ButtonWithProgress apiProgress={apiProgress} onClick={onClickSave}>
@@ -50,7 +51,7 @@ const ProfileCard: React.FC<IProfileCard> = (props) => {
   } else {
     content = (
       <>
-        <h3>{props.username}</h3>
+        <h3>{newUsername}</h3>
         {isCurrentUser && !isEditMode && (
           <button
             className="btn btn-outline-success"
