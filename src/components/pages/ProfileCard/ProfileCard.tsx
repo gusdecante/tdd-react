@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../core/redux/store";
+import { useSelector, useDispatch } from "react-redux";
+import { onLoginSuccess, RootState } from "../../../core/redux/store";
 import defaultProfileImage from "../../../assets/profile.png";
 import { ButtonWithProgress, Input } from "../../widget";
 import { updateUser } from "../../../core/api/apiCalls";
@@ -15,20 +15,39 @@ const ProfileCard: React.FC<IProfileCard> = (props) => {
   const [apiProgress, setApiProgress] = useState(false);
   const [newUsername, setNewUsername] = useState<string>(props.username);
 
-  const { id, header } = useSelector((store: RootState) => ({
+  const dispatch = useDispatch();
+
+  const auth = useSelector((store: RootState) => ({
     id: store.id,
     header: store.header,
+    username: store.username,
+    ...store,
   }));
 
-  const isCurrentUser = props.id === Number(id);
+  const isCurrentUser = props.id === Number(auth.id);
 
   const onClickSave = async () => {
     setApiProgress(true);
     try {
-      await updateUser(props.id, { username: newUsername }, header as string);
+      await updateUser(
+        props.id,
+        { username: newUsername },
+        auth.header as string
+      );
       setIsEditMode(false);
+      dispatch(
+        onLoginSuccess({
+          ...auth,
+          username: newUsername,
+        })
+      );
     } catch (error) {}
     setApiProgress(false);
+  };
+
+  const onClickCancel = () => {
+    setIsEditMode(false);
+    setNewUsername(auth.username as string);
   };
 
   let content;
@@ -45,7 +64,9 @@ const ProfileCard: React.FC<IProfileCard> = (props) => {
         <ButtonWithProgress apiProgress={apiProgress} onClick={onClickSave}>
           Save
         </ButtonWithProgress>
-        <button className="btn btn-outline-secondary">Cancel</button>
+        <button className="btn btn-outline-secondary" onClick={onClickCancel}>
+          Cancel
+        </button>
       </>
     );
   } else {
