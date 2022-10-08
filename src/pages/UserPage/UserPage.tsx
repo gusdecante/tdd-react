@@ -23,7 +23,7 @@ export const UserPage = () => {
       setPendingApiCall(false);
     };
     handleGetUserById();
-  }, []);
+  }, [id]);
 
   let content = (
     <Alert type="secondary" center>
