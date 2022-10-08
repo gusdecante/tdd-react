@@ -139,4 +139,32 @@ describe("Profile card", () => {
     await waitForElementToBeRemoved(spinner);
     expect(requestBody).toEqual({ username: "user5" });
   });
+  it("hides edit layout after successful update", async () => {
+    await setupInEditMode();
+    await user.click(saveButton);
+    const editButton = await screen.findByRole("button", { name: "Edit" });
+    expect(editButton).toBeInTheDocument();
+  });
+  it("updates username in profile card after successful update", async () => {
+    await setupInEditMode();
+    const editInput = screen.getByLabelText("Change your username");
+    await user.clear(editInput);
+    await user.type(editInput, "new-username");
+    await user.click(saveButton);
+    const newUsername = await screen.findByRole("heading", {
+      name: "new-username",
+    });
+    expect(newUsername).toBeInTheDocument();
+  });
+  it("displays last updated name in input in edit mode after successful username update", async () => {
+    await setupInEditMode();
+    let editInput = screen.getByLabelText("Change your username");
+    await user.clear(editInput);
+    await user.type(editInput, "new-username");
+    await user.click(saveButton);
+    const editButton = await screen.findByRole("button", { name: "Edit" });
+    await user.click(editButton);
+    editInput = screen.getByLabelText("Change your username");
+    expect(editInput).toHaveValue("new-username");
+  });
 });
