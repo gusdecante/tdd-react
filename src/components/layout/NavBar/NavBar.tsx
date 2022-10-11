@@ -1,15 +1,31 @@
+import { MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/hoaxify.png";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../core/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { onLogoutSuccess, RootState } from "../../../core/redux/store";
+import { logout } from "../../../core/api/apiCalls";
 
-const Wrapper: React.FC<RootState> = ({ isLoggedIn, id }) => {
+export const NavBar = () => {
+  const auth = useSelector((store: RootState) => store);
   const { t } = useTranslation();
+  const dipatch = useDispatch();
+
+  const onClickLogout = async (event: MouseEvent) => {
+    event.preventDefault();
+    try {
+      await logout();
+    } catch (error) {}
+    dipatch(
+      onLogoutSuccess({
+        ...auth,
+      })
+    );
+  };
 
   let content;
 
-  if (!isLoggedIn) {
+  if (!auth.isLoggedIn) {
     content = (
       <>
         <Link className="nav-link" to="/signup">
@@ -22,16 +38,16 @@ const Wrapper: React.FC<RootState> = ({ isLoggedIn, id }) => {
     );
   } else {
     content = (
-      <Link className="nav-link" to={`/user/${id}`}>
-        My Profile
-      </Link>
+      <>
+        <Link className="nav-link" to={`/user/${auth.id}`}>
+          My Profile
+        </Link>
+        <a className="nav-link" href="/" onClick={onClickLogout}>
+          Logout
+        </a>
+      </>
     );
   }
-  return content;
-};
-
-export const NavBar = () => {
-  const auth = useSelector((store: RootState) => store);
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
@@ -40,9 +56,7 @@ export const NavBar = () => {
           <img src={logo} alt="Hoaxify" width="60" />
           Hoaxify
         </Link>
-        <ul className="navbar-nav">
-          <Wrapper {...auth} />
-        </ul>
+        <ul className="navbar-nav">{content}</ul>
       </div>
     </nav>
   );

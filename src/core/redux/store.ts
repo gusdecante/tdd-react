@@ -38,9 +38,10 @@ export const createStore = () => {
   return {
     store,
     onLoginSuccess: authSlice.actions.onLoginSuccess,
+    onLogoutSuccess: authSlice.actions.onLogoutSuccess,
   };
 };
 
-export const { store, onLoginSuccess } = createStore();
+export const { store, onLoginSuccess, onLogoutSuccess } = createStore();
 
 export type RootState = ReturnType<typeof store.getState>;
