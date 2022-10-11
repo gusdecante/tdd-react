@@ -19,7 +19,6 @@ const ProfileCard: React.FC<IProfileCard> = (props) => {
 
   const auth = useSelector((store: RootState) => ({
     id: store.id,
-    header: store.header,
     username: store.username,
     ...store,
   }));
@@ -29,11 +28,7 @@ const ProfileCard: React.FC<IProfileCard> = (props) => {
   const onClickSave = async () => {
     setApiProgress(true);
     try {
-      await updateUser(
-        props.id,
-        { username: newUsername },
-        auth.header as string
-      );
+      await updateUser(props.id, { username: newUsername });
       setIsEditMode(false);
       dispatch(
         onLoginSuccess({
