@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../../core/test/setup";
 import { UserList } from "./";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
@@ -8,6 +8,7 @@ import en from "../../../core/locale/en.json";
 import pt from "../../../core/locale/pt.json";
 
 import { LanguageSelector } from "../index";
+import { storage } from "../../../core/redux/storage";
 
 const jsonRespUsers = [
   {
@@ -67,8 +68,10 @@ const getPage = (page: number, size: number) => {
   };
 };
 
+let header: string | null;
 const server = setupServer(
   rest.get("/api/1.0/users", (req, res, ctx) => {
+    header = req.headers.get("Authorization");
     let page = Number.parseInt(req.url.searchParams.get("page") as string);
     let size = Number.parseInt(req.url.searchParams.get("size") as string);
 
@@ -95,12 +98,7 @@ afterAll(() => server.close());
 const user = userEvent.setup();
 
 const setup = () => {
-  render(
-    <Router>
-      <UserList />
-      <LanguageSelector />
-    </Router>
-  );
+  render(<UserList />);
 };
 
 describe("User List", () => {
@@ -163,6 +161,18 @@ describe("User List", () => {
       const spinner = screen.getByRole("status");
       await screen.findByText("user1");
       expect(spinner).not.toBeInTheDocument();
+    });
+    it("sends request with authorization header", async () => {
+      storage.setItem("auth", {
+        id: 5,
+        username: "user5",
+        header: "auth header value",
+        isLoggedIn: true,
+      });
+      setup();
+      // redux behavior reasons
+      await screen.findByText("user1");
+      expect(header).toBe("auth header value");
     });
   });
   describe("Internationalization", () => {
