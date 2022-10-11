@@ -1,6 +1,7 @@
 import axios, { AxiosRequestHeaders } from "axios";
 import { ILogin, IUserRequestBody } from "../interface";
 import i18n from "../locale/i18n";
+import { createStore } from "../redux/store";
 
 export interface ISignUp {
   username: string;
@@ -10,7 +11,10 @@ export interface ISignUp {
 
 axios.interceptors.request.use((request) => {
   const headers = request.headers as AxiosRequestHeaders;
+  const { store } = createStore();
   headers["Accept-Language"] = i18n.language;
+  headers["Authorization"] = store.getState().header as string;
+
   return request;
 });
 
@@ -34,14 +38,6 @@ export const login = (body: ILogin) => {
   return axios.post("/api/1.0/auth", body);
 };
 
-export const updateUser = (
-  id: number,
-  body: IUserRequestBody,
-  header: string
-) => {
-  return axios.put(`/api/1.0/users/${id}`, body, {
-    headers: {
-      Authorization: header,
-    },
-  });
+export const updateUser = (id: number, body: IUserRequestBody) => {
+  return axios.put(`/api/1.0/users/${id}`, body);
 };
